@@ -1,5 +1,8 @@
 # Import the pygame module
 import pygame
+from pygame import draw, sprite
+from pygame.draw import rect
+
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
 
@@ -11,6 +14,9 @@ from pygame.locals import (
     K_ESCAPE,
     KEYDOWN,
     QUIT,
+    MOUSEBUTTONDOWN,
+    MOUSEBUTTONUP,
+    MOUSEMOTION,
 )
 
 
@@ -23,16 +29,39 @@ SCREEN_HEIGHT = 600
 # The surface drawn on the screen is now an attribute of 'player'
 
 class Player(pygame.sprite.Sprite):
+    #def __init__(self):
+    #    lenRect = (25,25)
+    #    super(Player, self).__init__()
+    #    self.surf = pygame.Surface(lenRect)
+    #    self.surf.fill((255, 255, 255))
+    #    self.rect = self.surf.get_rect()
+    #    self.focus = False
+
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.Surface((75, 25))
-        self.surf.fill((255, 255, 255))
+        square_size = 25
+        margin = 0
+        lenBlock = ((square_size+margin)*3,square_size)
+        RED = (255, 0, 0)
+        GREEN = (0, 255, 0)
+        BLUE = (0, 0, 255)
+        self.surf = pygame.Surface(lenBlock)
+
+        # Dessiner les rectangles
+        rect1 = pygame.Rect(margin, margin, square_size, square_size)
+        rect2 = pygame.Rect(margin + square_size + margin, margin, square_size, square_size)
+        rect3 = pygame.Rect(margin + (square_size + margin) * 2, margin, square_size, square_size)
+
+        # Dessiner les rectangles sur l'écran
+        pygame.draw.rect(self.surf, RED, rect1)  # Rouge
+        pygame.draw.rect(self.surf, BLUE, rect2)  # Bleu
+        pygame.draw.rect(self.surf, GREEN, rect3)  # Vert
+
         self.rect = self.surf.get_rect()
+        self.focus = False
 
-# Move the sprite based on user keypresses
-
+    # Move the sprite based on user keypresses
     def update(self, pressed_keys):
-
         if pressed_keys[K_UP]:
             self.rect.move_ip(0, -5)
         if pressed_keys[K_DOWN]:
@@ -41,6 +70,11 @@ class Player(pygame.sprite.Sprite):
             self.rect.move_ip(-5, 0)
         if pressed_keys[K_RIGHT]:
             self.rect.move_ip(5, 0)
+
+    # Move the sprite based on mouse motion
+    def motionByMouse(self, rel):
+        self.rect.move_ip(event.rel)
+
 
 # Initialize pygame
 
@@ -64,13 +98,20 @@ clock = pygame.time.Clock()
 # Main loop
 while running:
     # for loop through the event queue
-
+    mouse_pos = pygame.mouse.get_pos()
     for event in pygame.event.get():
         # Check for KEYDOWN event
         if event.type == KEYDOWN:
-            # If the Esc key is pressed, then exit the main loop
             if event.key == K_ESCAPE:
                 running = False
+        elif event.type == MOUSEBUTTONDOWN and player.rect.collidepoint(mouse_pos):
+            #print('mouse down')
+            player.focus = True
+        elif event.type == MOUSEBUTTONUP:
+            player.focus = False
+        elif event.type == MOUSEMOTION and player.focus:
+            player.motionByMouse(event.rel)
+
         # Check for QUIT event. If QUIT, then set running to false.
         elif event.type == QUIT:
             running = False
