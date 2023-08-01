@@ -1,8 +1,7 @@
 # Import the pygame module
 
 import pygame
-from pygame import draw, sprite, FULLSCREEN
-from pygame.draw import rect
+import random
 
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
@@ -23,35 +22,66 @@ from pygame.locals import (
 import blocks
 
 # Define constants for the screen width and height
-
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-
-# Define a player object by extending pygame.sprite.Sprite
-# The surface drawn on the screen is now an attribute of 'player'
+FPS = 30
 
 
 # Initialize pygame
-
 pygame.init()
 
 
 # Create the screen object
-
 # The size is determined by the constant SCREEN_WIDTH and SCREEN_HEIGHT
-#screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),FULLSCREEN)
-screen = pygame.display.set_mode()
-pygame.display.set_caption('KROMINO')
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+#screen = pygame.display.set_mode()
+pygame.display.set_caption('CHROMINO')
 
-# Instantiate player. Right now, this is just a rectangle.
-#player = Player()
-player = blocks.Blocks()
+# Instantiate a bag of blocks
+bag = blocks.Bag()
+
+#get randomly the first block to start the game
+#always à 3 colors blocks
+#always in the first 10 position in the bag
+startBlockId = random.randint(1, 10)
+blockZero = bag.getBlock(startBlockId)
+bag.removeBlock(blockZero)
+
+#put the first block in the middle of the screen
+blockZero.block.move_ip((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+
 
 # Variable to keep the main loop running
-
 running = True
 
 clock = pygame.time.Clock()
+while running:
+
+    mouse_pos = pygame.mouse.get_pos()
+    #print(mouse_pos)
+    for event in pygame.event.get():
+        if event.type == MOUSEBUTTONDOWN and blockZero.block.collidepoint(mouse_pos):
+            blockZero.focus = True
+        elif event.type == MOUSEBUTTONUP:
+            blockZero.focus = False
+        elif event.type == MOUSEMOTION and blockZero.focus:
+            blockZero.motionByMouse(event.rel)
+        elif event.type == QUIT:
+            running = False
+
+
+    screen.fill((0, 0, 0))
+
+    # Draw the player on the screen
+    screen.blit(blockZero.surf, blockZero.block)
+
+    # Update the display
+    pygame.display.flip()
+
+    clock.tick(FPS)
+
+
+"""
 #squares = pygame.sprite.Group(player.rect)
 #squares.add(player.rect)
 
@@ -65,11 +95,13 @@ while running:
             if event.key == K_ESCAPE:
                 running = False
         elif event.type == MOUSEBUTTONDOWN and player.block.collidepoint(mouse_pos):
-            #print('mouse down')
-            player.focus = True
+            #player.focus = True
+            pass
         elif event.type == MOUSEBUTTONUP:
-            player.focus = False
-        elif event.type == MOUSEMOTION and player.focus:
+            #player.focus = False
+            pass
+        elif event.type == MOUSEMOTION :
+        #and player.focus:
             player.motionByMouse(event.rel)
 
 
@@ -98,3 +130,6 @@ while running:
     pygame.display.flip()
 
     clock.tick(30)
+
+"""
+
