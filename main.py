@@ -2,17 +2,12 @@
 
 import pygame
 import random
+import time
 
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
 
 from pygame.locals import (
-    K_UP,
-    K_DOWN,
-    K_LEFT,
-    K_RIGHT,
-    K_ESCAPE,
-    KEYDOWN,
     QUIT,
     MOUSEBUTTONDOWN,
     MOUSEBUTTONUP,
@@ -20,12 +15,14 @@ from pygame.locals import (
 )
 
 import blocks
+import playground
 
 # Define constants for the screen width and height
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1440
+SCREEN_HEIGHT = 900
 FPS = 30
-
+NBRBLOCKBYPLAYER = 1
+BACKGROUNDCOLOR = (250,233,217)
 
 # Initialize pygame
 pygame.init()
@@ -33,9 +30,13 @@ pygame.init()
 
 # Create the screen object
 # The size is determined by the constant SCREEN_WIDTH and SCREEN_HEIGHT
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-#screen = pygame.display.set_mode()
+#screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode()
 pygame.display.set_caption('CHROMINO')
+
+#create playGround
+theBoard = playground.PlayGround(SCREEN_WIDTH,SCREEN_HEIGHT)
+
 
 # Instantiate a bag of blocks
 bag = blocks.Bag()
@@ -43,37 +44,90 @@ bag = blocks.Bag()
 #get randomly the first block to start the game
 #always à 3 colors blocks
 #always in the first 10 position in the bag
-startBlockId = random.randint(1, 10)
+startBlockId = random.randint(0, 9)
 blockZero = bag.getBlock(startBlockId)
 bag.removeBlock(blockZero)
 
-#put the first block in the middle of the screen
-blockZero.block.move_ip((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
 
+#create the board
+board = []
+board.append(blockZero)
+
+#create the blocks for the player
+player = []
+for i in range(NBRBLOCKBYPLAYER):
+    blocksInBag = bag.getNumberBlock()
+    randomBlockId = random.randint(0, blocksInBag)
+    player.append( bag.getBlock(randomBlockId))
+    bag.removeBlock(bag.getBlock(randomBlockId))
+
+#create the blocks for the computer
+computer = []
+for i in range(NBRBLOCKBYPLAYER):
+    blocksInBag = bag.getNumberBlock()
+    randomBlockId = random.randint(0, blocksInBag)
+    computer.append (bag.getBlock(randomBlockId))
+    bag.removeBlock(bag.getBlock(randomBlockId))
+
+
+#create sprite group
+blocksGroup = pygame.sprite.Group()
+
+#put the first block in the middle of the board
+blockZero.block.x = blockZero.rectifPos(theBoard.boardTable.centerx)
+blockZero.block.y = blockZero.rectifPos(theBoard.boardTable.centery)
+blockZero.canBeMoved = False
+
+#show the blocks for the player
+
+player[0].setPosX(0)
+player[0].setPosY(SCREEN_HEIGHT - 150)
+player[0].block.move_ip(player[0].getPos())
+player[0].canBeMoved = True
+
+#blit the sceen
+screen.blit(theBoard.surf,theBoard.playGround)
+
+blocksGroup.add(blockZero)
+blocksGroup.add(player[0])
+
+for entity in blocksGroup:
+    screen.blit(entity.surf, entity.block)
 
 # Variable to keep the main loop running
 running = True
 
 clock = pygame.time.Clock()
 while running:
-
-    mouse_pos = pygame.mouse.get_pos()
-    #print(mouse_pos)
+    screen.fill(BACKGROUNDCOLOR)
+    screen.blit(theBoard.surf, theBoard.playGround)
+    #pygame.display.flip()
+    mousePos = pygame.mouse.get_pos()
     for event in pygame.event.get():
-        if event.type == MOUSEBUTTONDOWN and blockZero.block.collidepoint(mouse_pos):
-            blockZero.focus = True
-        elif event.type == MOUSEBUTTONUP:
-            blockZero.focus = False
-        elif event.type == MOUSEMOTION and blockZero.focus:
-            blockZero.motionByMouse(event.rel)
-        elif event.type == QUIT:
-            running = False
+        for playerBlock in player:
+            if event.type == MOUSEBUTTONDOWN and playerBlock.block.collidepoint(mousePos):
+                playerBlock.focus = True
+            elif event.type == MOUSEBUTTONUP:
+                playerBlock.focus = False
+                playerBlock.setPosX(playerBlock.rectifPos(mousePos[0]))
+                playerBlock.setPosY(playerBlock.rectifPos(mousePos[1]))
+                playerBlock.block.x = playerBlock.getPosX()
+                playerBlock.block.y = playerBlock.getPosY()
+            elif event.type == MOUSEMOTION and playerBlock.focus:
+                playerBlock.motionByMouse(event.rel)
+            elif event.type == QUIT:
+                running = False
 
+            if playerBlock.block.colliderect(theBoard.boardTable):
+                #print('je suis sur la table de jeu')
+                pass
 
-    screen.fill((0, 0, 0))
+    #END WHILE
 
     # Draw the player on the screen
-    screen.blit(blockZero.surf, blockZero.block)
+    #screen.blit(blockZero.surf, blockZero.block)
+    for entity in blocksGroup:
+        screen.blit(entity.surf, entity.block)
 
     # Update the display
     pygame.display.flip()
@@ -81,55 +135,4 @@ while running:
     clock.tick(FPS)
 
 
-"""
-#squares = pygame.sprite.Group(player.rect)
-#squares.add(player.rect)
-
-# Main loop
-while running:
-    # for loop through the event queue
-    mouse_pos = pygame.mouse.get_pos()
-    for event in pygame.event.get():
-        # Check for KEYDOWN event
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                running = False
-        elif event.type == MOUSEBUTTONDOWN and player.block.collidepoint(mouse_pos):
-            #player.focus = True
-            pass
-        elif event.type == MOUSEBUTTONUP:
-            #player.focus = False
-            pass
-        elif event.type == MOUSEMOTION :
-        #and player.focus:
-            player.motionByMouse(event.rel)
-
-
-        # Check for QUIT event. If QUIT, then set running to false.
-        elif event.type == QUIT:
-            running = False
-        # Get all the keys currently pressed
-
-    #pressed_keys = pygame.key.get_pressed()
-
-
-    # Update the player sprite based on user keypresses
-
-    #player.update(pressed_keys)
-
-    # Fill the screen with black
-    screen.fill((0, 0, 0))
-
-
-    # Draw the player on the screen
-    #screen.blit(player.surf, (SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-
-    screen.blit(player.surf, player.block)
-
-    # Update the display
-    pygame.display.flip()
-
-    clock.tick(30)
-
-"""
 
