@@ -29,6 +29,10 @@ class Blocks(pygame.sprite.Sprite):
         self.focus = False
         self.canBeMoved = True
 
+        self.col1 = col1
+        self.col2 = col2
+        self.col3 = col3
+
     def rectifPos(self,pos):
         diff = pos % self.SQUAREBORDERSIZE
         return pos - diff
