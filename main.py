@@ -17,13 +17,27 @@ from pygame.locals import (
 import blocks
 import playground
 
+def moveAllSpriteBoard(direction,board):
+    print('in moveAll direction '+direction)
+    for block in board:
+        print('dans le for')
+        if direction == 'U':
+            print(str(block.block.y)+' ---> '+ str(block.getPosY() - block.SQUAREBORDERSIZE))
+            #block.setPosXRectif(block.x)
+            #block.block.setPosYRectif(block.y - block.SQUAREBORDERSIZE)
+            #screen.blit(block.surf, block.block)
+            print(block.y)
+
+
+    #pygame.display.flip()
+
 if __name__ == "__main__":
     # Define constants for the screen width and height
     SCREEN_WIDTH = 1440
     SCREEN_HEIGHT = 900
     FPS = 30
     NBRBLOCKBYPLAYER = 9
-    BACKGROUNDCOLOR = (250,233,217)
+    BACKGROUNDCOLOR = (0,0,0)
 
     # Initialize pygame
     pygame.init()
@@ -79,13 +93,6 @@ if __name__ == "__main__":
     blockZero.block.y = blockZero.rectifPos(theBoard.boardTable.centery)
     blockZero.canBeMoved = False
 
-    #show the blocks for the player
-    """
-    player[0].setPosX(0)
-    player[0].setPosY(SCREEN_HEIGHT - 150)
-    player[0].block.move_ip(player[0].getPos())
-    player[0].canBeMoved = True
-    """
 
     #blit the sceen
     screen.blit(theBoard.surf,theBoard.playGround)
@@ -94,6 +101,7 @@ if __name__ == "__main__":
     posXPlayer = 0
     posYPlayer = SCREEN_HEIGHT - 180
     for playerBlock in player:
+
         playerBlock.setPosX(posXPlayer)
         playerBlock.setPosY(posYPlayer)
         playerBlock.block.x = posXPlayer
@@ -102,31 +110,33 @@ if __name__ == "__main__":
         playerBlock.canBeMoved = True
         blocksGroup.add(playerBlock)
         posXPlayer += 100
-        #screen.blit(playerBlock.surf, playerBlock.block)
-
-    #for entity in blocksGroup:
-    #    screen.blit(playerBlock.surf, entity.block)
 
     # Variable to keep the main loop running
     running = True
 
     clock = pygame.time.Clock()
+    captured = False
+    arrowCaptured = False
+
     while running:
-        movedBlock = None
+        #movedBlock = None
+
         screen.fill(BACKGROUNDCOLOR)
         screen.blit(theBoard.surf, theBoard.playGround)
         mousePos = pygame.mouse.get_pos()
+
         for event in pygame.event.get():
             for playerBlock in player:
-                if event.type == MOUSEBUTTONDOWN and playerBlock.block.collidepoint(mousePos):
-                    movedBlock = playerBlock.block
-                    playerBlock.focus = True
-                elif event.type == MOUSEBUTTONUP and playerBlock.focus :
-                    playerBlock.focus = False
-                    movedBlock = None
-
+                if event.type == MOUSEBUTTONDOWN and playerBlock.block.collidepoint(mousePos) and not captured:
+                    playerBlock.setFocus(True)
+                    captured = True
+                    pygame.mouse.set_pos(playerBlock.getPos())
+                elif event.type == MOUSEBUTTONDOWN and playerBlock.focus and captured:
+                    captured = False
+                    playerBlock.setFocus(False)
                     #rectif the x and y position only on the board
                     if theBoard.boardTable.collidepoint(mousePos):
+
                         xRectif = playerBlock.rectifPos(mousePos[0])
                         yRectif = playerBlock.rectifPos(mousePos[1])
 
@@ -137,10 +147,12 @@ if __name__ == "__main__":
                                 canBeValidate = False
 
                         if canBeValidate:
-                            playerBlock.setPosX(xRectif)
-                            playerBlock.setPosY(yRectif)
+                            playerBlock.setPosXRectif(xRectif)
+                            playerBlock.setPosYRectif(yRectif)
                             #validation
-                            #if validation ok remove from player or compyter and add to board
+                            #if validation ok remove from player or compyter and add to board and focus = False
+                            board.append(playerBlock)
+                            player.remove(playerBlock)
                     else:
                         playerBlock.setPosX(mousePos[0])
                         playerBlock.setPosY(mousePos[1])
@@ -148,8 +160,28 @@ if __name__ == "__main__":
                     playerBlock.block.x = playerBlock.getPosX()
                     playerBlock.block.y = playerBlock.getPosY()
 
-                elif event.type == MOUSEMOTION and playerBlock.focus :
+                elif event.type == pygame.KEYDOWN and playerBlock.focus:
+                    # Check if the key pressed is 'r'
+                    if event.key == pygame.K_r:
+                        playerBlock.rotate()
+                        playerBlock.setFocus(False)
+                        captured = False
+
+                elif event.type == MOUSEMOTION and playerBlock.focus:
                     playerBlock.motionByMouse(event.rel)
+
+                elif event.type == MOUSEBUTTONDOWN and \
+                        not captured and not arrowCaptured and theBoard.buttonUp.collidepoint(mousePos):
+                    print('arrow down')
+                    arrowCaptured = True
+                    moveAllSpriteBoard('U', board)
+                elif event.type == MOUSEBUTTONUP and \
+                        not captured and \
+                        theBoard.buttonUp.collidepoint(mousePos) and arrowCaptured:
+                    print('arrow up')
+                    arrowCaptured = False
+
+
                 elif event.type == QUIT:
                     running = False
 
@@ -158,9 +190,11 @@ if __name__ == "__main__":
         #END FOR EVENT
 
         # Draw the player on the screen
-        #screen.blit(blockZero.surf, blockZero.block)
+        print('*******************')
         for entity in blocksGroup:
+            print(entity)
             screen.blit(entity.surf, entity.block)
+
         #END FOR
 
         # Update the display
