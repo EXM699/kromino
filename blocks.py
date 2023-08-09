@@ -83,7 +83,7 @@ class Blocks(pygame.sprite.Sprite):
 
     def __init__(self,col1,col2,col3):
         super(Blocks, self).__init__()
-        self.SQUAREBORDERSIZEALIGN = 27
+        self.SQUAREBORDERSIZEALIGN = 26
 
         self.focus = False
         self.canBeMoved = True
@@ -93,11 +93,15 @@ class Blocks(pygame.sprite.Sprite):
 
     def rectifPos(self,pos):
         #return pos
+
         diff = pos % self.SQUAREBORDERSIZEALIGN
         if diff > (self.SQUAREBORDERSIZEALIGN//2):
-            return pos - diff + self.SQUAREBORDERSIZEALIGN
+            newPos =  pos - diff + self.SQUAREBORDERSIZEALIGN
         else:
-            return pos - diff
+            newPos = pos - diff
+
+        #return newPos - newPos % self.SQUAREBORDERSIZEALIGN
+        return newPos
 
     # Move the sprite based on mouse motion
     def motionByMouse(self, rel):

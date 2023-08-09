@@ -4,7 +4,7 @@ class PlayGround(pygame.sprite.Sprite):
     def __init__(self,screenwidth,screenhight):
 
         super(PlayGround, self).__init__()
-        self.rectsize = 27
+        self.rectsize = 26
         self.surf = pygame.Surface((screenwidth,screenhight))
 
         # Draw the 3 zones
@@ -20,13 +20,20 @@ class PlayGround(pygame.sprite.Sprite):
         pygame.draw.rect(self.surf, (255,255,0), self.boardTable)
 
 
-        #iter = screenhight // self.rectsize
-        #for i in range(iter - 1):
-        #    y= self.rectsize + self.rectsize * i
-        #    pygame.draw.line(self.surf,(255,0,0),(0,y),(screenwidth,y))
+        iter = screenhight // self.rectsize
+        for i in range(iter - 1):
+            y= self.rectsize + self.rectsize * i
+            pygame.draw.line(self.surf,(255,255,255),(0,y),(screenwidth,y))
+
+
+        iter = screenwidth // self.rectsize
+        for i in range(iter - 1):
+            x = self.rectsize + self.rectsize * i
+            pygame.draw.line(self.surf,(255,255,255),(x,0),(x,screenhight))
+
 
         pygame.draw.rect(self.surf, (255, 0, 0), self.score)
-        pygame.draw.rect(self.surf, (0, 0, 255), self.playerTable)
+        pygame.draw.rect(self.surf, (255, 0, 255), self.playerTable)
 
         pygame.draw.rect(self.surf, (220, 220, 220), self.buttonUp)
         pygame.draw.rect(self.surf, (220, 220, 220), self.buttonLeft)

@@ -2,7 +2,7 @@
 
 import pygame
 import random
-
+import array
 
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
@@ -17,22 +17,49 @@ from pygame.locals import (
 import blocks
 import playground
 
+
+
 def moveAllSpriteBoard(direction,board):
-    print('in moveAll direction '+direction)
+    global xRectifCoef
+    global yRectifCoef
     for block in board:
-        print('dans le for')
         if direction == 'U':
-            print(str(block.block.y)+' ---> '+ str(block.getPosY() - block.SQUAREBORDERSIZE))
-            #block.setPosXRectif(block.x)
-            #block.block.setPosYRectif(block.y - block.SQUAREBORDERSIZE)
-            #screen.blit(block.surf, block.block)
-            print(block.y)
+            yRectifCoef = yRectifCoef + 1
+            block.setPosXRectif(block.x)
+            block.setPosYRectif(block.y - block.SQUAREBORDERSIZE)
+            block.redraw()
+
+        if direction == 'D':
+            yRectifCoef = yRectifCoef - 1
+            block.setPosXRectif(block.x)
+            block.setPosYRectif(block.y + block.SQUAREBORDERSIZE)
+            block.redraw()
+
+        if direction == 'L':
+            xRectifCoef = xRectifCoef - 1
+            block.setPosYRectif(block.y)
+            block.setPosXRectif(block.x - block.SQUAREBORDERSIZE)
+            block.redraw()
+
+        if direction == 'R':
+            xRectifCoef = xRectifCoef + 1
+            block.setPosYRectif(block.y)
+            block.setPosXRectif(block.x + block.SQUAREBORDERSIZE)
+            block.redraw()
+
+def addToMatrix(matrix,posX,posY,color):
+    #print(color)
+    #print(int(posX/theBoard.rectsize + MATRIXCOEF))
+    matrix[int(posX/theBoard.rectsize + MATRIXCOEF)][int(posY/theBoard.rectsize + MATRIXCOEF)]=color
 
 
-    #pygame.display.flip()
 
 if __name__ == "__main__":
     # Define constants for the screen width and height
+    xRectifCoef = 0
+    yRectifCoef = 0
+
+    MATRIXCOEF = 100
     SCREEN_WIDTH = 1440
     SCREEN_HEIGHT = 900
     FPS = 30
@@ -84,6 +111,8 @@ if __name__ == "__main__":
         computer.append (bag.getBlock(randomBlockId))
         bag.removeBlock(bag.getBlock(randomBlockId))
 
+    gameMatrix = [[0 for _ in range(1000)] for _ in range(1000)]
+
 
     #create sprite group
     blocksGroup = pygame.sprite.Group()
@@ -91,8 +120,20 @@ if __name__ == "__main__":
     #put the first block in the middle of the board
     blockZero.block.x = blockZero.rectifPos(theBoard.boardTable.centerx)
     blockZero.block.y = blockZero.rectifPos(theBoard.boardTable.centery)
+    blockZero.setPosX(blockZero.block.x)
+    blockZero.setPosY(blockZero.block.y)
     blockZero.canBeMoved = False
 
+    addToMatrix(gameMatrix, blockZero.x, blockZero.y, blockZero.col1)
+
+    print(gameMatrix[124][112])
+
+    #for row in gameMatrix:
+    #    print(row)
+
+
+    print(blockZero.block.x/theBoard.rectsize + MATRIXCOEF)
+    print(blockZero.block.y/theBoard.rectsize + MATRIXCOEF)
 
     #blit the sceen
     screen.blit(theBoard.surf,theBoard.playGround)
@@ -172,14 +213,47 @@ if __name__ == "__main__":
 
                 elif event.type == MOUSEBUTTONDOWN and \
                         not captured and not arrowCaptured and theBoard.buttonUp.collidepoint(mousePos):
-                    print('arrow down')
                     arrowCaptured = True
-                    moveAllSpriteBoard('U', board)
+
                 elif event.type == MOUSEBUTTONUP and \
                         not captured and \
-                        theBoard.buttonUp.collidepoint(mousePos) and arrowCaptured:
-                    print('arrow up')
+                        theBoard.buttonUp.collidepoint(mousePos) and \
+                        arrowCaptured:
                     arrowCaptured = False
+                    moveAllSpriteBoard('U', board)
+
+                elif event.type == MOUSEBUTTONDOWN and \
+                        not captured and not arrowCaptured and theBoard.buttonDown.collidepoint(mousePos):
+                    arrowCaptured = True
+
+                elif event.type == MOUSEBUTTONUP and \
+                        not captured and \
+                        theBoard.buttonDown.collidepoint(mousePos) and \
+                        arrowCaptured:
+                    arrowCaptured = False
+                    moveAllSpriteBoard('D', board)
+
+                elif event.type == MOUSEBUTTONDOWN and \
+                        not captured and not arrowCaptured and theBoard.buttonLeft.collidepoint(mousePos):
+                    arrowCaptured = True
+
+                elif event.type == MOUSEBUTTONUP and \
+                        not captured and \
+                        theBoard.buttonLeft.collidepoint(mousePos) and \
+                        arrowCaptured:
+                    arrowCaptured = False
+                    moveAllSpriteBoard('L', board)
+
+                elif event.type == MOUSEBUTTONDOWN and \
+                        not captured and not arrowCaptured and theBoard.buttonRight.collidepoint(mousePos):
+                    arrowCaptured = True
+
+                elif event.type == MOUSEBUTTONUP and \
+                        not captured and \
+                        theBoard.buttonRight.collidepoint(mousePos) and \
+                        arrowCaptured:
+                    arrowCaptured = False
+                    moveAllSpriteBoard('R', board)
 
 
                 elif event.type == QUIT:
@@ -190,9 +264,7 @@ if __name__ == "__main__":
         #END FOR EVENT
 
         # Draw the player on the screen
-        print('*******************')
         for entity in blocksGroup:
-            print(entity)
             screen.blit(entity.surf, entity.block)
 
         #END FOR
