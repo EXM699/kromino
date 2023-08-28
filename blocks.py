@@ -81,14 +81,14 @@ class Blocks(pygame.sprite.Sprite):
         self.block = self.surf.get_rect()
 
 
-    def __init__(self,col1,col2,col3):
+    def __init__(self,col1,col2,col3,posx = 0, posy=0):
         super(Blocks, self).__init__()
         self.SQUAREBORDERSIZEALIGN = 26
 
         self.focus = False
         self.canBeMoved = True
         self.orientation = None
-        self.horizontalBlock(col1, col2, col3,0,0)
+        self.horizontalBlock(col1, col2, col3,posx,posy)
 
 
     def rectifPos(self,pos):
@@ -138,8 +138,10 @@ class Blocks(pygame.sprite.Sprite):
     def rotate(self):
         if self.orientation == 'H':
             self.verticalBlock(self.col1,self.col2,self.col3,self.x,self.y)
+            self.orientation = 'V'
         else:
             self.horizontalBlock(self.col3,self.col2,self.col1,self.x,self.y)
+            self.orientation = 'H'
 
         self.block.x = self.x
         self.block.y = self.y
@@ -148,7 +150,7 @@ class Blocks(pygame.sprite.Sprite):
         if self.orientation == 'V':
             self.verticalBlock(self.col1,self.col2,self.col3,self.x,self.y)
         else:
-            self.horizontalBlock(self.col3,self.col2,self.col1,self.x,self.y)
+            self.horizontalBlock(self.col1,self.col2,self.col3,self.x,self.y)
 
         self.block.x = self.x
         self.block.y = self.y
@@ -172,11 +174,23 @@ class Bag():
         self.colors = self.setColor()
         self.bagBlocks = []
 
-        for i in range(100): #just for the dev period
+        for i in range(len(self.colors)):
             #Three time the same color
             for color in self.colors:
                 self.bagBlocks.append(Blocks(color, color, color))
                 self.bagBlocks.append(Blocks(color, color, color))
+
+        for masterColor in self.colors:
+            #Three time the same color
+            for color in self.colors:
+                self.bagBlocks.append(Blocks(masterColor, masterColor, color))
+                self.bagBlocks.append(Blocks(masterColor, masterColor, color))
+
+        for col1 in self.colors:
+            for col2 in self.colors:
+                for col3 in self.colors:
+                    self.bagBlocks.append(Blocks(col1,col2,col3))
+                    self.bagBlocks.append(Blocks(col1,col2,col3))
 
         #Twice the same color
 

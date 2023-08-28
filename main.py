@@ -2,7 +2,6 @@
 
 import pygame
 import random
-import array
 
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
@@ -36,22 +35,361 @@ def moveAllSpriteBoard(direction,board):
             block.redraw()
 
         if direction == 'L':
-            xRectifCoef = xRectifCoef - 1
+            xRectifCoef = xRectifCoef + 1
             block.setPosYRectif(block.y)
             block.setPosXRectif(block.x - block.SQUAREBORDERSIZE)
             block.redraw()
 
         if direction == 'R':
-            xRectifCoef = xRectifCoef + 1
+            xRectifCoef = xRectifCoef - 1
             block.setPosYRectif(block.y)
             block.setPosXRectif(block.x + block.SQUAREBORDERSIZE)
             block.redraw()
 
-def addToMatrix(matrix,posX,posY,color):
-    #print(color)
-    #print(int(posX/theBoard.rectsize + MATRIXCOEF))
-    matrix[int(posX/theBoard.rectsize + MATRIXCOEF)][int(posY/theBoard.rectsize + MATRIXCOEF)]=color
+def addToMatrix(matrix,block):
+    global minX
+    global maxX
+    global minY
+    global maxY
 
+    x = int(block.x/theBoard.rectsize + MATRIXCOEF + xRectifCoef)
+    y = int(block.y/theBoard.rectsize + MATRIXCOEF + yRectifCoef)
+    xOrig = x
+    yOrig = y
+
+    matrix[x][y]=block.col1
+
+    if block.orientation == 'H':
+        x = x + 1
+        matrix[x][y] = block.col2
+        x = x + 1
+        matrix[x][y] = block.col3
+        if x < minX:
+            minX = xOrig
+
+        if x + 2 > maxX:
+            maxX = x + 2
+
+        if y < minY:
+            minY = yOrig
+        elif y > maxY:
+            maxY = yOrig
+
+        #print('HORIZONTAL minX ' + str(minX) + 'maxX ' + str(maxX))
+        #print('HORIZONTAL minY ' + str(minY) + 'maxy ' + str(maxY))
+
+    else:
+        y = y + 1
+        matrix[x][y] = block.col2
+        y = y + 1
+        matrix[x][y] = block.col3
+
+        if x < minX:
+            minX = x
+        elif x > maxX:
+            maxX = x
+
+        if y < minY:
+            minY = y
+
+        if y+2 > maxY:
+            maxY = y + 2
+
+    if maxY ==0:
+        maxY = minY
+
+def transScreenPosMatPosX(x):
+    x = int((x / theBoard.rectsize) + MATRIXCOEF)
+    return x + xRectifCoef
+
+def transScreenPosMatPosY(y):
+    y = int((y / theBoard.rectsize) + MATRIXCOEF)
+    return y +  yRectifCoef
+
+def checkBlockArround(matrix,color,x,y):
+    val = 0
+    # curent pos
+    x = int(x)
+    y = int(y)
+    if matrix[x][y] != 0:
+        return -1
+
+    # left
+    #if matrix[x-1][ y] != 0:
+    #    return -1
+
+    if matrix[x-1][ y] == color:
+        val = val + 1
+
+    if matrix[x-1][y] != color and matrix[x-1][ y] != 0:
+        return - 1
+
+    # up
+    #if matrix[x ][ y-1] != 0:
+    #    return -1
+
+    if matrix[x ][ y-1] == color:
+        val = val + 1
+
+    if matrix[x][ y-1] != color and matrix[x][ y-1] != 0:
+        return - 1
+
+
+    # right
+    #if matrix[x + 1][ y] != 0:
+    #    return -1
+
+    if matrix[x+1][ y] == color:
+        val = val + 1
+
+    if matrix[x+1][ y] != color and matrix[x+1][ y] != 0:
+        return - 1
+
+    # down
+    #if matrix[x ][ y + 1] != 0:
+    #    return -1
+
+    if matrix[x][ y+1] == color:
+        val = val + 1
+
+    if matrix[x][ y+1] != color and matrix[x][ y+1] != 0:
+        return - 1
+
+    return val
+
+def validationBlockV(matrix,block,x,y):
+    val = 0
+    rep = checkBlockArround(matrix, block.col1,int(x),int(y))
+
+    if rep == -1:
+        return False
+    else:
+        val = val + rep
+
+    rep = checkBlockArround(matrix, block.col2, int(x ), int(y+1))
+
+    if rep == -1:
+        return False
+    else:
+        val = val + rep
+
+    rep =  checkBlockArround(matrix, block.col3, int(x ), int(y+2))
+
+    if rep == -1:
+        return False
+    else:
+        val = val + rep
+
+    return val > 1
+
+def validationBlockH(matrix, block, x, y):
+    val = 0
+
+    rep = checkBlockArround(matrix, block.col1, int(x), int(y))
+
+    if rep == -1:
+        return False
+    else:
+        val = val + rep
+
+    rep = checkBlockArround(matrix, block.col2, int(x+1) , int(y))
+
+    if rep == -1:
+        return False
+    else:
+        val = val + rep
+
+    rep = checkBlockArround(matrix, block.col3, int(x+2) , int(y))
+
+    if rep == -1:
+        return False
+    else:
+        val = val + rep
+
+    return val > 1
+def validationBlock(matrix,block,x,y):
+    if block.orientation == 'H':
+        return validationBlockH(matrix, block, x, y)
+
+    if block.orientation == 'V':
+        return validationBlockV(matrix, block, x, y)
+
+def validationBlockOld(matrix,block,x,y):
+    #x = int(x / theBoard.rectsize + MATRIXCOEF)
+    #y = int(y / theBoard.rectsize + MATRIXCOEF)
+    #x = x + xRectifCoef
+    #y = y + yRectifCoef
+    nbrBlock = 0
+    stillOk = True
+    if block.orientation == 'H':
+        #First COLOR
+        #Verif block at Left
+        if matrix[x][y] != 0:
+            stillOk = False
+        if matrix[x+1][y] != 0:
+            stillOk = False
+        if matrix[x+2][y] != 0:
+            stillOk = False
+
+        if matrix[x - 1][y] != block.col1 and matrix[x - 1][y] != 0 and stillOk:
+            stillOk = False
+        if matrix[x - 1][y] == block.col1 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at UP
+        if matrix[x][y-1] != block.col1 and matrix[x][y-1] != 0 and stillOk:
+            stillOk = False
+        if matrix[x][y-1] == block.col1 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at DOWN
+        if matrix[x][y + 1] != block.col1 and matrix[x][y + 1] != 0  and stillOk:
+            stillOk = False
+        if matrix[x][y + 1] == block.col1 and stillOk:
+            nbrBlock = nbrBlock + 1
+        #MIDDLECOLOR
+        # Verif block at UP
+        if matrix[x+1][y - 1] != block.col2 and matrix[x+1][y - 1] != 0  and stillOk:
+            stillOk = False
+        if matrix[x+1][y - 1] == block.col2 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at DOWN
+        if matrix[x+1][y + 1] != block.col2 and matrix[x+1][y + 1] != 0  and stillOk:
+            stillOk = False
+        if matrix[x+1][y + 1] == block.col2 and stillOk:
+            nbrBlock = nbrBlock + 1
+        #addToMatrix()
+        # LASTCOLOR
+        # Verif block at UP
+        if matrix[x + 2][y - 1] != block.col3 and matrix[x + 2][y - 1] != 0  and stillOk:
+            stillOk = False
+        if matrix[x + 2][y - 1] == block.col3 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at DOWN
+        if matrix[x + 2][y + 1] != block.col3 and matrix[x + 2][y + 1] != 0  and stillOk:
+            stillOk = False
+        if matrix[x + 2][y + 1] == block.col3 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at RIGHT
+        if matrix[x + 3][y] != block.col3 and matrix[x + 2][y + 1] != 0 and stillOk:
+            stillOk = False
+        if matrix[x + 3][y] == block.col3 and stillOk:
+            nbrBlock = nbrBlock + 1
+    else:
+        #First COLOR
+        if matrix[x][y] != 0:
+            stillOk = False
+        if matrix[x][y+1] != 0:
+            stillOk = False
+        if matrix[x][y+2] != 0:
+            stillOk = False
+        #Verif block at Left
+        if matrix[x - 1][y] != block.col1 and matrix[x - 1][y] != 0 and stillOk:
+            stillOk = False
+        if matrix[x - 1][y] == block.col1 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at up
+        if matrix[x ][y-1] != block.col1 and matrix[x][y-1] != 0 and stillOk:
+            stillOk = False
+        if matrix[x][y-1] == block.col1 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at right
+        if matrix[x + 1][y] != block.col1 and matrix[x + 1][y] != 0 and stillOk:
+            stillOk = False
+        if matrix[x + 1][y] == block.col1 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Middle COLOR
+        # Verif block at Left
+        if matrix[x - 1][y+1] != block.col2 and matrix[x - 1][y] != 0 and stillOk:
+            stillOk = False
+        if matrix[x - 1][y+1] == block.col2 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at right
+        if matrix[x + 1][y+1] != block.col1 and matrix[x][y] != 0 and stillOk:
+            stillOk = False
+        if matrix[x + 1][y+1] == block.col1 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # LAST COLOR
+        # Verif block at DOWN
+        if matrix[x][y + 3] != block.col3 and matrix[x][y + 3] != 0 and stillOk:
+            stillOk = False
+        if matrix[x][y + 3 ] == block.col3 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at Left
+        if matrix[x - 1][y + 2] != block.col3 and matrix[x - 1][y + 2] != 0 and stillOk:
+            stillOk = False
+        if matrix[x - 1][y + 2] == block.col3 and stillOk:
+            nbrBlock = nbrBlock + 1
+        # Verif block at right
+        if matrix[x + 1][y + 2] != block.col3 and matrix[x + 1][y + 2] != 0 and stillOk:
+            stillOk = False
+        if matrix[x + 1][y + 2] == block.col3 and stillOk:
+            nbrBlock = nbrBlock + 1
+
+    return stillOk and nbrBlock > 1
+def computerIA(matrix,computer,minX,maxX,minY,maxY):
+    #each block
+    #print('minX '+str(minX)+'maxX '+str(maxX))
+    #print('minY '+str(minY)+'maxy '+str(maxY))
+
+    blockOk = False
+    find = False
+    for block in computer:
+        #print('*********************')
+        i = 0
+        #for postion
+        while i <= 3 and not find:
+            x = minX - 3
+            #print('i '+str(i))
+            #print(block.orientation)
+            while x <= maxX + 2 and not find:
+                x = x + 1
+                y = minY - 3
+                #print('y '+str(y))
+                while y <= maxY + 2 and  not find:
+                    y = y + 1
+                    #print('x ' + str(x)+' y ' + str(y)+ str(block.col1)+' '+str(block.col2)+' '+str(block.col3))
+
+                    blockOk = validationBlock(matrix,block,x,y)
+                    if blockOk:
+                        #print('OK 1')
+                        find = True
+
+                    #y = y + 1
+                #x = x + 1
+            if not find:
+                block.rotate()
+                i = i + 1
+
+        if find:
+            break
+
+    #print(blockOk)
+    if blockOk:
+        #afficher le block
+        #print("le computer sait jouer")
+        #print('X matrix computer '+str(x))
+        #print('Y matrix computer ' + str(y))
+        print('position blockzero '+str(blockZero.x)+' '+str(blockZero.y))
+        print('ICI ' + str(x)+ ' '+ str(y))
+        calculX = ((x - MATRIXCOEF) * theBoard.rectsize) - (xRectifCoef * theBoard.rectsize)
+        calculY = ((y - MATRIXCOEF) * theBoard.rectsize) - (yRectifCoef * theBoard.rectsize)
+
+        print('rectif '+ str(calculX)+' '+str(calculY))
+
+        block.setPosX(calculX)
+        block.setPosY(calculY)
+        addToMatrix(gameMatrix, block)
+        computer.remove(block)
+        board.append(block)
+        #print('ia a joué '+str(block.x)+' '+str(block.y))
+        block.redraw()
+        blocksGroup.add(block)
+
+    else:
+        print('le computer prend un pion')
+        blocksInBag = bag.getNumberBlock()
+        randomBlockId = random.randint(0, blocksInBag - 1)
+        computer.append(bag.getBlock(randomBlockId))
+        bag.removeBlock(bag.getBlock(randomBlockId))
 
 
 if __name__ == "__main__":
@@ -60,11 +398,16 @@ if __name__ == "__main__":
     yRectifCoef = 0
 
     MATRIXCOEF = 100
-    SCREEN_WIDTH = 1440
-    SCREEN_HEIGHT = 900
+    #SCREEN_WIDTH = 1440
+    #SCREEN_HEIGHT = 900
     FPS = 30
     NBRBLOCKBYPLAYER = 9
     BACKGROUNDCOLOR = (0,0,0)
+
+    minX = 124 #a calculer
+    maxX = 127
+    minY = 112
+    maxY = 113
 
     # Initialize pygame
     pygame.init()
@@ -75,10 +418,10 @@ if __name__ == "__main__":
     #screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     screen = pygame.display.set_mode()
     pygame.display.set_caption('CHROMINO')
-
+    SCREEN_WIDTH = screen.get_width()
+    SCREEN_HEIGHT = screen.get_height()
     #create playGround
     theBoard = playground.PlayGround(SCREEN_WIDTH,SCREEN_HEIGHT)
-
 
     # Instantiate a bag of blocks
     bag = blocks.Bag()
@@ -100,7 +443,7 @@ if __name__ == "__main__":
     for i in range(NBRBLOCKBYPLAYER):
         blocksInBag = bag.getNumberBlock()
         randomBlockId = random.randint(0, blocksInBag-1)
-        player.append( bag.getBlock(randomBlockId))
+        player.append(bag.getBlock(randomBlockId))
         bag.removeBlock(bag.getBlock(randomBlockId))
 
     #create the blocks for the computer
@@ -123,17 +466,7 @@ if __name__ == "__main__":
     blockZero.setPosX(blockZero.block.x)
     blockZero.setPosY(blockZero.block.y)
     blockZero.canBeMoved = False
-
-    addToMatrix(gameMatrix, blockZero.x, blockZero.y, blockZero.col1)
-
-    print(gameMatrix[124][112])
-
-    #for row in gameMatrix:
-    #    print(row)
-
-
-    print(blockZero.block.x/theBoard.rectsize + MATRIXCOEF)
-    print(blockZero.block.y/theBoard.rectsize + MATRIXCOEF)
+    addToMatrix(gameMatrix,blockZero)
 
     #blit the sceen
     screen.blit(theBoard.surf,theBoard.playGround)
@@ -152,15 +485,37 @@ if __name__ == "__main__":
         blocksGroup.add(playerBlock)
         posXPlayer += 100
 
+    #to debug IA
+
+    """
+    posXComputer = SCREEN_WIDTH - 180
+    posYComputer = 0
+    for playerComputer in computer:
+        playerComputer.setPosX(posXComputer)
+        playerComputer.setPosY(posYComputer)
+        playerComputer.block.x = posXComputer
+        playerComputer.block.y = posYComputer
+
+        playerComputer.canBeMoved = False
+        blocksGroup.add(playerComputer)
+        posYComputer += 30
+    """
+    ##########
+
     # Variable to keep the main loop running
     running = True
 
     clock = pygame.time.Clock()
     captured = False
     arrowCaptured = False
+    addBlock = False
+    turn = 'PLAYER'
 
-    while running:
-        #movedBlock = None
+
+    while running and computer and player and bag :
+        if turn == 'COMPUTER':
+            computerIA(gameMatrix, computer,minX,maxX,minY,maxY)
+            turn = 'PLAYER'
 
         screen.fill(BACKGROUNDCOLOR)
         screen.blit(theBoard.surf, theBoard.playGround)
@@ -188,12 +543,15 @@ if __name__ == "__main__":
                                 canBeValidate = False
 
                         if canBeValidate:
-                            playerBlock.setPosXRectif(xRectif)
-                            playerBlock.setPosYRectif(yRectif)
                             #validation
-                            #if validation ok remove from player or compyter and add to board and focus = False
-                            board.append(playerBlock)
-                            player.remove(playerBlock)
+
+                            if validationBlock(gameMatrix,playerBlock,transScreenPosMatPosX(xRectif),transScreenPosMatPosY(yRectif)):
+                                playerBlock.setPosXRectif(xRectif)
+                                playerBlock.setPosYRectif(yRectif)
+                                board.append(playerBlock)
+                                addToMatrix(gameMatrix, playerBlock)
+                                player.remove(playerBlock)
+                                turn = 'COMPUTER'
                     else:
                         playerBlock.setPosX(mousePos[0])
                         playerBlock.setPosY(mousePos[1])
@@ -255,6 +613,22 @@ if __name__ == "__main__":
                     arrowCaptured = False
                     moveAllSpriteBoard('R', board)
 
+                elif event.type == MOUSEBUTTONDOWN and not captured and \
+                        theBoard.buttonAdd.collidepoint(mousePos) and \
+                        not arrowCaptured and not addBlock:
+                    addBlock = True
+
+                    blocksInBag = bag.getNumberBlock()
+                    randomBlockId = random.randint(0, blocksInBag - 1)
+                    player.append(bag.getBlock(randomBlockId))
+                    blocksGroup.add(bag.getBlock(randomBlockId))
+                    bag.removeBlock(bag.getBlock(randomBlockId))
+                    turn = 'COMPUTER'
+
+                elif event.type == MOUSEBUTTONUP and not captured and \
+                        theBoard.buttonAdd.collidepoint(mousePos) and \
+                        not arrowCaptured and addBlock:
+                    addBlock = False
 
                 elif event.type == QUIT:
                     running = False
@@ -276,4 +650,12 @@ if __name__ == "__main__":
 
         # END WHILE
 
+    if not computer:
+        print('computer won')
+
+    if not player:
+        print('player won')
+
+    if not bag:
+        print('empty bag')
     #END __MAIN__
