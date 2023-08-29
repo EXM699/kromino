@@ -18,7 +18,7 @@ class PlayGround(pygame.sprite.Sprite):
         self.buttonRight = self.button(screenwidth - 250, screenhight - 375,self.rectsize,self.rectsize)
         self.buttonAdd = self.button(screenwidth - 100, screenhight - 375,self.rectsize * 3,self.rectsize * 3)
 
-        pygame.draw.rect(self.surf, (255,255,0), self.boardTable)
+        pygame.draw.rect(self.surf, (63,124,182), self.boardTable)
 
         iter = screenhight // self.rectsize
         for i in range(iter - 1):

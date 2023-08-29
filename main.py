@@ -21,27 +21,36 @@ import playground
 def moveAllSpriteBoard(direction,board):
     global xRectifCoef
     global yRectifCoef
+
+    if direction == 'U':
+        yRectifCoef = yRectifCoef + 1
+
+    if direction == 'D':
+        yRectifCoef = yRectifCoef - 1
+
+    if direction == 'L':
+        xRectifCoef = xRectifCoef + 1
+
+    if direction == 'R':
+        xRectifCoef = xRectifCoef - 1
+
     for block in board:
         if direction == 'U':
-            yRectifCoef = yRectifCoef + 1
             block.setPosXRectif(block.x)
             block.setPosYRectif(block.y - block.SQUAREBORDERSIZE)
             block.redraw()
 
         if direction == 'D':
-            yRectifCoef = yRectifCoef - 1
             block.setPosXRectif(block.x)
             block.setPosYRectif(block.y + block.SQUAREBORDERSIZE)
             block.redraw()
 
         if direction == 'L':
-            xRectifCoef = xRectifCoef + 1
             block.setPosYRectif(block.y)
             block.setPosXRectif(block.x - block.SQUAREBORDERSIZE)
             block.redraw()
 
         if direction == 'R':
-            xRectifCoef = xRectifCoef - 1
             block.setPosYRectif(block.y)
             block.setPosXRectif(block.x + block.SQUAREBORDERSIZE)
             block.redraw()
@@ -208,153 +217,37 @@ def validationBlockH(matrix, block, x, y):
 
     return val > 1
 def validationBlock(matrix,block,x,y):
+    print('*************')
+    print('Dans Validation Bock')
+    print('minX ' + str(minX) + ' maxX ' + str(maxX))
+    print('minY ' + str(minY) + ' maxY ' + str(maxY))
+    print('xRectifCoef '+ str(xRectifCoef))
+    print('yRectifCoef ' + str(yRectifCoef))
+    print('x '+ str(x)+' Y '+str(y))
     if block.orientation == 'H':
         return validationBlockH(matrix, block, x, y)
 
     if block.orientation == 'V':
         return validationBlockV(matrix, block, x, y)
 
-def validationBlockOld(matrix,block,x,y):
-    #x = int(x / theBoard.rectsize + MATRIXCOEF)
-    #y = int(y / theBoard.rectsize + MATRIXCOEF)
-    #x = x + xRectifCoef
-    #y = y + yRectifCoef
-    nbrBlock = 0
-    stillOk = True
-    if block.orientation == 'H':
-        #First COLOR
-        #Verif block at Left
-        if matrix[x][y] != 0:
-            stillOk = False
-        if matrix[x+1][y] != 0:
-            stillOk = False
-        if matrix[x+2][y] != 0:
-            stillOk = False
-
-        if matrix[x - 1][y] != block.col1 and matrix[x - 1][y] != 0 and stillOk:
-            stillOk = False
-        if matrix[x - 1][y] == block.col1 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at UP
-        if matrix[x][y-1] != block.col1 and matrix[x][y-1] != 0 and stillOk:
-            stillOk = False
-        if matrix[x][y-1] == block.col1 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at DOWN
-        if matrix[x][y + 1] != block.col1 and matrix[x][y + 1] != 0  and stillOk:
-            stillOk = False
-        if matrix[x][y + 1] == block.col1 and stillOk:
-            nbrBlock = nbrBlock + 1
-        #MIDDLECOLOR
-        # Verif block at UP
-        if matrix[x+1][y - 1] != block.col2 and matrix[x+1][y - 1] != 0  and stillOk:
-            stillOk = False
-        if matrix[x+1][y - 1] == block.col2 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at DOWN
-        if matrix[x+1][y + 1] != block.col2 and matrix[x+1][y + 1] != 0  and stillOk:
-            stillOk = False
-        if matrix[x+1][y + 1] == block.col2 and stillOk:
-            nbrBlock = nbrBlock + 1
-        #addToMatrix()
-        # LASTCOLOR
-        # Verif block at UP
-        if matrix[x + 2][y - 1] != block.col3 and matrix[x + 2][y - 1] != 0  and stillOk:
-            stillOk = False
-        if matrix[x + 2][y - 1] == block.col3 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at DOWN
-        if matrix[x + 2][y + 1] != block.col3 and matrix[x + 2][y + 1] != 0  and stillOk:
-            stillOk = False
-        if matrix[x + 2][y + 1] == block.col3 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at RIGHT
-        if matrix[x + 3][y] != block.col3 and matrix[x + 2][y + 1] != 0 and stillOk:
-            stillOk = False
-        if matrix[x + 3][y] == block.col3 and stillOk:
-            nbrBlock = nbrBlock + 1
-    else:
-        #First COLOR
-        if matrix[x][y] != 0:
-            stillOk = False
-        if matrix[x][y+1] != 0:
-            stillOk = False
-        if matrix[x][y+2] != 0:
-            stillOk = False
-        #Verif block at Left
-        if matrix[x - 1][y] != block.col1 and matrix[x - 1][y] != 0 and stillOk:
-            stillOk = False
-        if matrix[x - 1][y] == block.col1 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at up
-        if matrix[x ][y-1] != block.col1 and matrix[x][y-1] != 0 and stillOk:
-            stillOk = False
-        if matrix[x][y-1] == block.col1 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at right
-        if matrix[x + 1][y] != block.col1 and matrix[x + 1][y] != 0 and stillOk:
-            stillOk = False
-        if matrix[x + 1][y] == block.col1 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Middle COLOR
-        # Verif block at Left
-        if matrix[x - 1][y+1] != block.col2 and matrix[x - 1][y] != 0 and stillOk:
-            stillOk = False
-        if matrix[x - 1][y+1] == block.col2 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at right
-        if matrix[x + 1][y+1] != block.col1 and matrix[x][y] != 0 and stillOk:
-            stillOk = False
-        if matrix[x + 1][y+1] == block.col1 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # LAST COLOR
-        # Verif block at DOWN
-        if matrix[x][y + 3] != block.col3 and matrix[x][y + 3] != 0 and stillOk:
-            stillOk = False
-        if matrix[x][y + 3 ] == block.col3 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at Left
-        if matrix[x - 1][y + 2] != block.col3 and matrix[x - 1][y + 2] != 0 and stillOk:
-            stillOk = False
-        if matrix[x - 1][y + 2] == block.col3 and stillOk:
-            nbrBlock = nbrBlock + 1
-        # Verif block at right
-        if matrix[x + 1][y + 2] != block.col3 and matrix[x + 1][y + 2] != 0 and stillOk:
-            stillOk = False
-        if matrix[x + 1][y + 2] == block.col3 and stillOk:
-            nbrBlock = nbrBlock + 1
-
-    return stillOk and nbrBlock > 1
 def computerIA(matrix,computer,minX,maxX,minY,maxY):
-    #each block
-    #print('minX '+str(minX)+'maxX '+str(maxX))
-    #print('minY '+str(minY)+'maxy '+str(maxY))
 
     blockOk = False
     find = False
     for block in computer:
-        #print('*********************')
         i = 0
-        #for postion
         while i <= 3 and not find:
             x = minX - 3
-            #print('i '+str(i))
-            #print(block.orientation)
             while x <= maxX + 2 and not find:
                 x = x + 1
                 y = minY - 3
                 #print('y '+str(y))
                 while y <= maxY + 2 and  not find:
                     y = y + 1
-                    #print('x ' + str(x)+' y ' + str(y)+ str(block.col1)+' '+str(block.col2)+' '+str(block.col3))
-
                     blockOk = validationBlock(matrix,block,x,y)
                     if blockOk:
-                        #print('OK 1')
                         find = True
 
-                    #y = y + 1
-                #x = x + 1
             if not find:
                 block.rotate()
                 i = i + 1
@@ -364,23 +257,14 @@ def computerIA(matrix,computer,minX,maxX,minY,maxY):
 
     #print(blockOk)
     if blockOk:
-        #afficher le block
-        #print("le computer sait jouer")
-        #print('X matrix computer '+str(x))
-        #print('Y matrix computer ' + str(y))
-        print('position blockzero '+str(blockZero.x)+' '+str(blockZero.y))
-        print('ICI ' + str(x)+ ' '+ str(y))
         calculX = ((x - MATRIXCOEF) * theBoard.rectsize) - (xRectifCoef * theBoard.rectsize)
         calculY = ((y - MATRIXCOEF) * theBoard.rectsize) - (yRectifCoef * theBoard.rectsize)
-
-        print('rectif '+ str(calculX)+' '+str(calculY))
 
         block.setPosX(calculX)
         block.setPosY(calculY)
         addToMatrix(gameMatrix, block)
         computer.remove(block)
         board.append(block)
-        #print('ia a joué '+str(block.x)+' '+str(block.y))
         block.redraw()
         blocksGroup.add(block)
 
