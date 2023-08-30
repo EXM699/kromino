@@ -17,7 +17,6 @@ import blocks
 import playground
 
 
-
 def moveAllSpriteBoard(direction,board):
     global xRectifCoef
     global yRectifCoef
@@ -37,23 +36,37 @@ def moveAllSpriteBoard(direction,board):
     for block in board:
         if direction == 'U':
             block.setPosXRectif(block.x)
-            block.setPosYRectif(block.y - block.SQUAREBORDERSIZE)
-            block.redraw()
+            block.setPosYRectif(block.y - block.SQUAREBORDERSIZECONST)
+            #block.redraw()
 
         if direction == 'D':
             block.setPosXRectif(block.x)
-            block.setPosYRectif(block.y + block.SQUAREBORDERSIZE)
-            block.redraw()
+            block.setPosYRectif(block.y + block.SQUAREBORDERSIZECONST)
+            #block.redraw()
 
         if direction == 'L':
             block.setPosYRectif(block.y)
-            block.setPosXRectif(block.x - block.SQUAREBORDERSIZE)
-            block.redraw()
+            block.setPosXRectif(block.x - block.SQUAREBORDERSIZECONST)
+            #block.redraw()
 
         if direction == 'R':
             block.setPosYRectif(block.y)
-            block.setPosXRectif(block.x + block.SQUAREBORDERSIZE)
-            block.redraw()
+            block.setPosXRectif(block.x + block.SQUAREBORDERSIZECONST)
+
+        if block.orientation == 'H':
+            if block.x + (3 * theBoard.rectsize) < theBoard.boardTable.size[0] and block.y < theBoard.boardTable.size[1]:
+                block.hide = False
+            else:
+                block.hide = True
+
+        if block.orientation == 'V':
+            if block.x  < theBoard.boardTable.size[0] and block.y + (3 * theBoard.rectsize) < theBoard.boardTable.size[1]:
+                block.hide = False
+            else:
+                block.hide = True
+
+        block.redraw()
+
 
 def addToMatrix(matrix,block):
     global minX
@@ -83,9 +96,6 @@ def addToMatrix(matrix,block):
             minY = yOrig
         elif y > maxY:
             maxY = yOrig
-
-        #print('HORIZONTAL minX ' + str(minX) + 'maxX ' + str(maxX))
-        #print('HORIZONTAL minY ' + str(minY) + 'maxy ' + str(maxY))
 
     else:
         y = y + 1
@@ -217,13 +227,6 @@ def validationBlockH(matrix, block, x, y):
 
     return val > 1
 def validationBlock(matrix,block,x,y):
-    print('*************')
-    print('Dans Validation Bock')
-    print('minX ' + str(minX) + ' maxX ' + str(maxX))
-    print('minY ' + str(minY) + ' maxY ' + str(maxY))
-    print('xRectifCoef '+ str(xRectifCoef))
-    print('yRectifCoef ' + str(yRectifCoef))
-    print('x '+ str(x)+' Y '+str(y))
     if block.orientation == 'H':
         return validationBlockH(matrix, block, x, y)
 
@@ -241,7 +244,7 @@ def computerIA(matrix,computer,minX,maxX,minY,maxY):
             while x <= maxX + 2 and not find:
                 x = x + 1
                 y = minY - 3
-                #print('y '+str(y))
+
                 while y <= maxY + 2 and  not find:
                     y = y + 1
                     blockOk = validationBlock(matrix,block,x,y)
@@ -255,7 +258,6 @@ def computerIA(matrix,computer,minX,maxX,minY,maxY):
         if find:
             break
 
-    #print(blockOk)
     if blockOk:
         calculX = ((x - MATRIXCOEF) * theBoard.rectsize) - (xRectifCoef * theBoard.rectsize)
         calculY = ((y - MATRIXCOEF) * theBoard.rectsize) - (yRectifCoef * theBoard.rectsize)
@@ -269,7 +271,6 @@ def computerIA(matrix,computer,minX,maxX,minY,maxY):
         blocksGroup.add(block)
 
     else:
-        print('le computer prend un pion')
         blocksInBag = bag.getNumberBlock()
         randomBlockId = random.randint(0, blocksInBag - 1)
         computer.append(bag.getBlock(randomBlockId))

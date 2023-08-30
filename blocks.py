@@ -4,14 +4,21 @@ import pygame
 class Blocks(pygame.sprite.Sprite):
     RED = (255, 0, 0)
     BLACK = (0,0,0)
-    def horizontalBlock(self,col1,col2,col3,x,y):
+    def horizontalBlock(self,col1,col2,col3,x,y,hide = False):
         BORDERCOLOR = self.BLACK
         if self.focus:
             self.SQUAREBORDERSIZE = 30
+            self.SQUAREBORDERSIZECONST = 30
         else:
             self.SQUAREBORDERSIZE = 27
+            self.SQUAREBORDERSIZECONST = 27
 
-        self.SQUARESIZE = 25
+        self.SQUARESIZECONST = 25
+        if hide:
+            self.SQUARESIZE = 0
+            self.SQUAREBORDERSIZE = 0
+        else:
+            self.SQUARESIZE = 25
 
         margin = (self.SQUAREBORDERSIZE - self.SQUARESIZE) / 2
         lenBlock = (margin + self.SQUARESIZE + margin + self.SQUARESIZE + margin + self.SQUARESIZE + margin,
@@ -41,15 +48,22 @@ class Blocks(pygame.sprite.Sprite):
 
         self.block = self.surf.get_rect()
 
-    def verticalBlock(self,col1,col2,col3,x,y):
+    def verticalBlock(self,col1,col2,col3,x,y,hide=False):
 
         BORDERCOLOR = self.BLACK
         if self.focus:
             self.SQUAREBORDERSIZE = 30
+            self.SQUAREBORDERSIZECONST = 30
         else:
             self.SQUAREBORDERSIZE = 27
+            self.SQUAREBORDERSIZECONST = 27
 
-        self.SQUARESIZE = 25
+        self.SQUARESIZECONST = 25
+        if hide:
+            self.SQUARESIZE = 0
+            self.SQUAREBORDERSIZE = 0
+        else:
+            self.SQUARESIZE = 25
 
         margin = (self.SQUAREBORDERSIZE - self.SQUARESIZE) / 2
         lenBlock = (margin + self.SQUARESIZE + margin,
@@ -85,6 +99,8 @@ class Blocks(pygame.sprite.Sprite):
         super(Blocks, self).__init__()
         self.SQUAREBORDERSIZEALIGN = 26
 
+        self.isKilled = False
+        self.hide = False
         self.focus = False
         self.canBeMoved = True
         self.orientation = None
@@ -148,9 +164,9 @@ class Blocks(pygame.sprite.Sprite):
 
     def redraw(self):
         if self.orientation == 'V':
-            self.verticalBlock(self.col1,self.col2,self.col3,self.x,self.y)
+            self.verticalBlock(self.col1,self.col2,self.col3,self.x,self.y,self.hide)
         else:
-            self.horizontalBlock(self.col1,self.col2,self.col3,self.x,self.y)
+            self.horizontalBlock(self.col1,self.col2,self.col3,self.x,self.y,self.hide)
 
         self.block.x = self.x
         self.block.y = self.y
