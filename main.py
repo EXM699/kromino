@@ -93,37 +93,39 @@ def addToMatrix(matrix,block):
     matrix[x][y]=block.col1
 
     if block.orientation == 'H':
-        x = x + 1
-        matrix[x][y] = block.col2
-        x = x + 1
-        matrix[x][y] = block.col3
-        if x < minX:
+        if x < minX or minX == 0:
             minX = xOrig
 
-        if x + 2 > maxX:
+        if x + 2 > maxX or minX == 0:
             maxX = x + 2
 
-        if y < minY:
+        if y < minY or minY == 0:
             minY = yOrig
-        elif y > maxY:
+        elif y > maxY or minX == 0:
             maxY = yOrig
 
+        x = x + 1
+        matrix[x][y] = block.col2
+        x = x + 1
+        matrix[x][y] = block.col3
+
     else:
+
+        if x < minX or minX == 0:
+            minX = x
+        elif x > maxX or minX == 0:
+            maxX = x
+
+        if y < minY or minY == 0:
+            minY = y
+
+        if y+2 > maxY or minY == 0:
+            maxY = y + 2
+
         y = y + 1
         matrix[x][y] = block.col2
         y = y + 1
         matrix[x][y] = block.col3
-
-        if x < minX:
-            minX = x
-        elif x > maxX:
-            maxX = x
-
-        if y < minY:
-            minY = y
-
-        if y+2 > maxY:
-            maxY = y + 2
 
     if maxY ==0:
         maxY = minY
@@ -244,7 +246,17 @@ def validationBlock(matrix,block,x,y):
 
     if block.orientation == 'V':
         return validationBlockV(matrix, block, x, y)
+@timing
+def computerIANEw(matrix,computer,minX,maxX,minY,maxY):
+    #possible positions
+    matPos = []
+    for x in range(minX - 2, maxX + 2):
+        for y in range(minY - 2 , maxX + 2):
+            if matrix[x][y] == 0:
+                matPos.append((x,y))
 
+    for pos in matPos:
+        print(pos)
 @timing
 def computerIA(matrix,computer,minX,maxX,minY,maxY):
     blockOk = False
@@ -336,12 +348,15 @@ if __name__ == "__main__":
     blockZero.canBeMoved = False
 
     #create MBR
-    minX = blockZero.x
-    maxX = blockZero.x + 3
-    minY = blockZero.y
-    maxY = blockZero.y + 3
+    #minX = blockZero.x
+    #maxX = blockZero.x + 3
+    #minY = blockZero.y
+    #maxY = blockZero.y + 3
 
-
+    minX = 0
+    maxX = 0
+    minY = 0
+    maxY = 0
 
     #create the board
     board = []
