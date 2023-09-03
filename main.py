@@ -2,6 +2,7 @@
 
 import pygame
 import random
+import datetime
 
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
@@ -16,6 +17,16 @@ from pygame.locals import (
 import blocks
 import playground
 
+def timing(func):
+    def inner(*args,**kwargs):
+        print('******************* '+func.__name__+' *******************' )
+        ct = datetime.datetime.now()
+        print("current time:-", ct)
+        result = func(*args,**kwargs)
+        ct = datetime.datetime.now()
+        print("current time:-", ct)
+        return  result
+    return inner
 
 def moveAllSpriteBoard(direction,board):
     global xRectifCoef
@@ -226,6 +237,7 @@ def validationBlockH(matrix, block, x, y):
         val = val + rep
 
     return val > 1
+
 def validationBlock(matrix,block,x,y):
     if block.orientation == 'H':
         return validationBlockH(matrix, block, x, y)
@@ -233,21 +245,23 @@ def validationBlock(matrix,block,x,y):
     if block.orientation == 'V':
         return validationBlockV(matrix, block, x, y)
 
+@timing
 def computerIA(matrix,computer,minX,maxX,minY,maxY):
-
     blockOk = False
     find = False
     for block in computer:
         i = 0
         while i <= 3 and not find:
-            x = minX - 3
+            x = minX - 2
             while x <= maxX + 2 and not find:
                 x = x + 1
-                y = minY - 3
+                y = minY - 2
 
                 while y <= maxY + 2 and  not find:
                     y = y + 1
-                    blockOk = validationBlock(matrix,block,x,y)
+                    if (block.orientation == 'H' and matrix[x][y] == 0 and matrix[x+1][y] == 0 and matrix[x+2][y] == 0 ) or \
+                            (block.orientation == 'V' and matrix[x][y] == 0 and matrix[x][y+1] == 0 and matrix[x][y+2] == 0 ):
+                        blockOk = validationBlock(matrix,block,x,y)
                     if blockOk:
                         find = True
 
@@ -289,10 +303,6 @@ if __name__ == "__main__":
     NBRBLOCKBYPLAYER = 9
     BACKGROUNDCOLOR = (0,0,0)
 
-    minX = 124 #a calculer
-    maxX = 127
-    minY = 112
-    maxY = 113
 
     # Initialize pygame
     pygame.init()
@@ -318,6 +328,20 @@ if __name__ == "__main__":
     blockZero = bag.getBlock(startBlockId)
     bag.removeBlock(blockZero)
 
+    #put the first block in the middle of the board
+    blockZero.block.x = blockZero.rectifPos(theBoard.boardTable.centerx)
+    blockZero.block.y = blockZero.rectifPos(theBoard.boardTable.centery)
+    blockZero.setPosX(blockZero.block.x)
+    blockZero.setPosY(blockZero.block.y)
+    blockZero.canBeMoved = False
+
+    #create MBR
+    minX = blockZero.x
+    maxX = blockZero.x + 3
+    minY = blockZero.y
+    maxY = blockZero.y + 3
+
+
 
     #create the board
     board = []
@@ -341,17 +365,11 @@ if __name__ == "__main__":
 
     gameMatrix = [[0 for _ in range(1000)] for _ in range(1000)]
 
+    addToMatrix(gameMatrix,blockZero)
 
     #create sprite group
     blocksGroup = pygame.sprite.Group()
 
-    #put the first block in the middle of the board
-    blockZero.block.x = blockZero.rectifPos(theBoard.boardTable.centerx)
-    blockZero.block.y = blockZero.rectifPos(theBoard.boardTable.centery)
-    blockZero.setPosX(blockZero.block.x)
-    blockZero.setPosY(blockZero.block.y)
-    blockZero.canBeMoved = False
-    addToMatrix(gameMatrix,blockZero)
 
     #blit the sceen
     screen.blit(theBoard.surf,theBoard.playGround)

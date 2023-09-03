@@ -54,10 +54,10 @@ class PlayGround(pygame.sprite.Sprite):
 
 
     def button(self,x,y,sizeX,sizeY):
-        image = pygame.image.load ('./assets/arrow_right.png').convert()
-        self.buttonRect = image.get_rect()
-        #self.buttonRect = pygame.Rect(x, y, sizeX, sizeY)
-        self.buttonRect.x = x
-        self.buttonRect.y = y
+        #image = pygame.image.load ('./assets/arrow_right.png').convert()
+        #self.buttonRect = image.get_rect()
+        self.buttonRect = pygame.Rect(x, y, sizeX, sizeY)
+        #self.buttonRect.x = x
+        #self.buttonRect.y = y
         #self.buttonRect.size((sizeX,sizeY))
         return self.buttonRect
