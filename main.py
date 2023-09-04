@@ -246,19 +246,9 @@ def validationBlock(matrix,block,x,y):
 
     if block.orientation == 'V':
         return validationBlockV(matrix, block, x, y)
-@timing
-def computerIANEw(matrix,computer,minX,maxX,minY,maxY):
-    #possible positions
-    matPos = []
-    for x in range(minX - 2, maxX + 2):
-        for y in range(minY - 2 , maxX + 2):
-            if matrix[x][y] == 0:
-                matPos.append((x,y))
 
-    for pos in matPos:
-        print(pos)
-@timing
-def computerIA(matrix,computer,minX,maxX,minY,maxY):
+
+def computerIA(matrix, computer, minX, maxX, minY, maxY):
     blockOk = False
     find = False
     for block in computer:
@@ -429,6 +419,7 @@ if __name__ == "__main__":
     addBlock = False
     turn = 'PLAYER'
 
+    #playground.Button.draw(theBoard.surf)
 
     while running and computer and player and bag :
         if turn == 'COMPUTER':
