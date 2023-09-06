@@ -529,10 +529,16 @@ if __name__ == "__main__":
 
                     blocksInBag = bag.getNumberBlock()
                     randomBlockId = random.randint(0, blocksInBag - 1)
-                    player.append(bag.getBlock(randomBlockId))
-                    blocksGroup.add(bag.getBlock(randomBlockId))
-                    bag.removeBlock(bag.getBlock(randomBlockId))
+                    tempoBlock = bag.getBlock(randomBlockId)
+                    print(theBoard.playerTable.x)
+                    print(theBoard.playerTable.y)
+                    tempoBlock.setPosX(theBoard.playerTable.x)
+                    tempoBlock.setPosY(theBoard.playerTable.y)
+                    player.append(tempoBlock)
+                    blocksGroup.add(tempoBlock)
+                    bag.removeBlock(tempoBlock)
                     turn = 'COMPUTER'
+                    tempoBlock.redraw()
 
                 elif event.type == MOUSEBUTTONUP and not captured and \
                         theBoard.buttonAdd.collidepoint(mousePos) and \
