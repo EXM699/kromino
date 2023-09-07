@@ -1,4 +1,5 @@
 # Import the pygame module
+import time
 
 import pygame
 import random
@@ -423,8 +424,22 @@ if __name__ == "__main__":
 
     while running and computer and player and bag :
         if turn == 'COMPUTER':
-            computerIA(gameMatrix, computer,minX,maxX,minY,maxY)
+            #thinking = theBoard.rectImage(SCREEN_WIDTH/2 - 200,SCREEN_HEIGHT/2 , 50, 50,
+            #                   './assets/reflechir.png', 0, theBoard.surf)
+
+            rect = pygame.Rect(SCREEN_WIDTH/2 - 200,SCREEN_HEIGHT/2 - 300 , 50, 50)
+
+            icon = pygame.image.load('./assets/reflechir.png')
+            icon = pygame.transform.scale(icon, (50, 50))
+
+            #surface.blit(self.icon, self.rect)
+            screen.blit(icon,rect)
+            pygame.display.flip()
+            #pygame.display.flip()
+            time.sleep(2)
+            computerIA(gameMatrix, computer, minX, maxX, minY, maxY)
             turn = 'PLAYER'
+
 
         screen.fill(BACKGROUNDCOLOR)
         screen.blit(theBoard.surf, theBoard.playGround)
@@ -530,8 +545,6 @@ if __name__ == "__main__":
                     blocksInBag = bag.getNumberBlock()
                     randomBlockId = random.randint(0, blocksInBag - 1)
                     tempoBlock = bag.getBlock(randomBlockId)
-                    print(theBoard.playerTable.x)
-                    print(theBoard.playerTable.y)
                     tempoBlock.setPosX(theBoard.playerTable.x)
                     tempoBlock.setPosY(theBoard.playerTable.y)
                     player.append(tempoBlock)
@@ -566,11 +579,20 @@ if __name__ == "__main__":
         # END WHILE
 
     if not computer:
-        print('computer won')
+        endGame = theBoard.rectImage(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 200, 400, 200,
+                                    './assets/you_win.png', 0, theBoard.surf)
+
+        time.sleep(10)
 
     if not player:
-        print('player won')
+        endGame = theBoard.rectImage(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 200, 400, 200,
+                                    './assets/you_lose.png', 0, theBoard.surf)
 
+        time.sleep(10)
     if not bag:
-        print('empty bag')
+        endGame = theBoard.rectImage(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 200, 400, 200,
+                                     './assets/you_lose.png', 0, theBoard.surf)
+
+        time.sleep(10)
+
     #END __MAIN__

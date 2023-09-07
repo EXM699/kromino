@@ -11,7 +11,7 @@ class PlayGround(pygame.sprite.Sprite):
 
         # Draw the 3 zones
         self.boardTable = pygame.Rect(0, 0, screenwidth - 200, screenhight - 250)
-        self.carpet = self.rectImage(0, 0, screenwidth, screenhight, './assets/wall2.png', 0,
+        self.carpet = self.rectImage(0, 0, screenwidth, screenhight, './assets/wall.png', 0,
                                      self.surf)
         self.score = pygame.Rect(screenwidth - 200, 0, 200, screenhight - 250)
         self.playerTable = pygame.Rect(0, screenhight - 250,screenwidth , 250)
@@ -21,7 +21,7 @@ class PlayGround(pygame.sprite.Sprite):
         #                                 self.surf)
         #self.score = self.rectImage(screenwidth - 200, 0, 200, screenhight - 250, './assets/table_top.png', 0,
         #                                 self.surf)
-        iter = screenhight // self.rectsize
+        #iter = screenhight // self.rectsize
         #for i in range(iter - 1):
         #    y = self.rectsize + self.rectsize * i
         #    pygame.draw.line(self.surf,(255,255,255),(0,y),(screenwidth,y))
@@ -61,5 +61,6 @@ class PlayGround(pygame.sprite.Sprite):
         self.icon = pygame.transform.rotate(self.icon, coefRot)
 
         surface.blit(self.icon, self.rect)
+        #pygame.display.flip()
 
         return self.rect
