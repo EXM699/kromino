@@ -190,27 +190,15 @@ class Bag():
         self.colors = self.setColor()
         self.bagBlocks = []
 
-        for i in range(len(self.colors)):
-            #Three time the same color
-            for color in self.colors:
-                self.bagBlocks.append(Blocks(color, color, color))
-                self.bagBlocks.append(Blocks(color, color, color))
-
-        for masterColor in self.colors:
-            #Three time the same color
-            for color in self.colors:
-                self.bagBlocks.append(Blocks(masterColor, masterColor, color))
-                self.bagBlocks.append(Blocks(masterColor, masterColor, color))
+        for color in self.colors:
+            self.bagBlocks.append(Blocks(color, color, color))
 
         for col1 in self.colors:
             for col2 in self.colors:
                 for col3 in self.colors:
-                    self.bagBlocks.append(Blocks(col1,col2,col3))
-                    self.bagBlocks.append(Blocks(col1,col2,col3))
+                        if Blocks(col1,col2,col3) not in self.bagBlocks and Blocks(col3,col2,col1) not in self.bagBlocks :
+                            self.bagBlocks.append(Blocks(col1,col2,col3))
 
-        #Twice the same color
-
-        #Three different color
 
 
     def getBlock(self,index):

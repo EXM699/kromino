@@ -66,7 +66,6 @@ def moveAllSpriteBoard(direction,board):
             block.setPosXRectif(block.x + block.SQUAREBORDERSIZECONST)
 
         if block.orientation == 'H':
-            print(block.y)
             if (block.x + (3 * theBoard.rectsize) < theBoard.boardTable.size[0] and block.y < theBoard.boardTable.size[1]\
                     and (block.y > 127)):
                 block.hide = False
@@ -259,10 +258,10 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
     for block in computer:
         i = 0
         while i <= 3 and not find:
-            x = minX - 2
+            x = minX - 3
             while x <= maxX + 2 and not find:
                 x = x + 1
-                y = minY - 2
+                y = minY - 3
 
                 while y <= maxY + 2 and  not find:
                     y = y + 1
@@ -318,7 +317,6 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
         time.sleep(3)
 
 def findFreeSpace(x = None, y = None):
-    print(' -----> findFreeSpece '+str(x)+' '+str(y))
     if x is None:
         x = theBoard.playerTable.x
     if y is None:
@@ -327,9 +325,7 @@ def findFreeSpace(x = None, y = None):
     for blockPlayer in player:
         if blockPlayer.x == x and blockPlayer.y == y:
             x = (x + blockPlayer.SQUAREBORDERSIZE * 3) + 5
-            print('new x '+str(x))
             if x > theBoard.playerTable.width:
-                print('out off width')
                 x = 0
                 y = y + blockPlayer.SQUAREBORDERSIZE + 5
                 return findFreeSpace(x, y)
@@ -338,10 +334,8 @@ def findFreeSpace(x = None, y = None):
             if y > screen.get_height():
                 x = theBoard.playerTable.x
                 y = theBoard.playerTable.y
-                print('out of borad then in corener')
                 break
 
-            print('recall findfreespace')
             return findFreeSpace(x,y)
             break
 
@@ -380,7 +374,7 @@ if __name__ == "__main__":
     #get randomly the first block to start the game
     #always à 3 colors blocks
     #always in the first 10 position in the bag
-    startBlockId = random.randint(0, 9)
+    startBlockId = random.randint(0, 4)
     blockZero = bag.getBlock(startBlockId)
     bag.removeBlock(blockZero)
 
@@ -528,8 +522,8 @@ if __name__ == "__main__":
                     # Check if the key pressed is 'r'
                     if event.key == pygame.K_r:
                         playerBlock.rotate()
-                        playerBlock.setFocus(False)
-                        captured = False
+                        playerBlock.setFocus(True)
+                        captured = True
 
                 elif event.type == MOUSEMOTION and playerBlock.focus:
                     playerBlock.motionByMouse(event.rel)
@@ -587,8 +581,6 @@ if __name__ == "__main__":
                     randomBlockId = random.randint(0, blocksInBag - 1)
                     tempoBlock = bag.getBlock(randomBlockId)
                     posInPlayerTable = findFreeSpace()
-                    print('je set la position ')
-                    print(posInPlayerTable)
                     tempoBlock.setPosX(posInPlayerTable[0])
                     tempoBlock.setPosY(posInPlayerTable[1])
                     player.append(tempoBlock)
@@ -625,7 +617,7 @@ if __name__ == "__main__":
     if  not computer:
         rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
 
-        endGame = pygame.image.load('./assets/you_win.png')
+        endGame = pygame.image.load('./assets/you_lose.png')
         endGame = pygame.transform.scale(endGame, (400, 200))
 
         # surface.blit(self.icon, self.rect)
@@ -640,7 +632,7 @@ if __name__ == "__main__":
 
         rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
 
-        endGame = pygame.image.load('./assets/you_lose.png')
+        endGame = pygame.image.load('./assets/you_win.png')
         endGame = pygame.transform.scale(endGame, (400, 200))
 
         # surface.blit(self.icon, self.rect)
