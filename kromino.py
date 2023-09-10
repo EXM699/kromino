@@ -66,13 +66,16 @@ def moveAllSpriteBoard(direction,board):
             block.setPosXRectif(block.x + block.SQUAREBORDERSIZECONST)
 
         if block.orientation == 'H':
-            if block.x + (3 * theBoard.rectsize) < theBoard.boardTable.size[0] and block.y < theBoard.boardTable.size[1]:
+            print(block.y)
+            if (block.x + (3 * theBoard.rectsize) < theBoard.boardTable.size[0] and block.y < theBoard.boardTable.size[1]\
+                    and (block.y > 127)):
                 block.hide = False
             else:
                 block.hide = True
 
         if block.orientation == 'V':
-            if block.x  < theBoard.boardTable.size[0] and block.y + (3 * theBoard.rectsize) < theBoard.boardTable.size[1]:
+            if block.x  < theBoard.boardTable.size[0] and block.y + (3 * theBoard.rectsize) < theBoard.boardTable.size[1]\
+                    and (block.y > 127):
                 block.hide = False
             else:
                 block.hide = True
@@ -250,6 +253,7 @@ def validationBlock(matrix,block,x,y):
 
 
 def computerIA(matrix, computer, minX, maxX, minY, maxY):
+
     blockOk = False
     find = False
     for block in computer:
@@ -276,6 +280,17 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
             break
 
     if blockOk:
+        rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
+
+        icon = pygame.image.load('./assets/reflechir.png')
+        icon = pygame.transform.scale(icon, (50, 50))
+
+        # surface.blit(self.icon, self.rect)
+        screen.blit(icon, rect)
+        pygame.display.flip()
+        # pygame.display.flip()
+        time.sleep(2)
+
         calculX = ((x - MATRIXCOEF) * theBoard.rectsize) - (xRectifCoef * theBoard.rectsize)
         calculY = ((y - MATRIXCOEF) * theBoard.rectsize) - (yRectifCoef * theBoard.rectsize)
 
@@ -292,6 +307,15 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
         randomBlockId = random.randint(0, blocksInBag - 1)
         computer.append(bag.getBlock(randomBlockId))
         bag.removeBlock(bag.getBlock(randomBlockId))
+        rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
+
+        icon = pygame.image.load('./assets/IA_takes.png')
+        icon = pygame.transform.scale(icon, (400, 50))
+
+        # surface.blit(self.icon, self.rect)
+        screen.blit(icon, rect)
+        pygame.display.flip()
+        time.sleep(2)
 
 
 if __name__ == "__main__":
@@ -422,24 +446,12 @@ if __name__ == "__main__":
 
     #playground.Button.draw(theBoard.surf)
 
+
+
     while running and computer and player and bag :
         if turn == 'COMPUTER':
-            #thinking = theBoard.rectImage(SCREEN_WIDTH/2 - 200,SCREEN_HEIGHT/2 , 50, 50,
-            #                   './assets/reflechir.png', 0, theBoard.surf)
-
-            rect = pygame.Rect(SCREEN_WIDTH/2 - 200,SCREEN_HEIGHT/2 - 300 , 50, 50)
-
-            icon = pygame.image.load('./assets/reflechir.png')
-            icon = pygame.transform.scale(icon, (50, 50))
-
-            #surface.blit(self.icon, self.rect)
-            screen.blit(icon,rect)
-            pygame.display.flip()
-            #pygame.display.flip()
-            time.sleep(2)
             computerIA(gameMatrix, computer, minX, maxX, minY, maxY)
             turn = 'PLAYER'
-
 
         screen.fill(BACKGROUNDCOLOR)
         screen.blit(theBoard.surf, theBoard.playGround)
@@ -578,21 +590,43 @@ if __name__ == "__main__":
 
         # END WHILE
 
-    if not computer:
-        endGame = theBoard.rectImage(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 200, 400, 200,
-                                    './assets/you_win.png', 0, theBoard.surf)
+    if  not computer:
+        rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
 
-        time.sleep(10)
+        endGame = pygame.image.load('./assets/you_win.png')
+        endGame = pygame.transform.scale(endGame, (400, 200))
+
+        # surface.blit(self.icon, self.rect)
+        screen.blit(endGame, rect)
+        pygame.display.flip()
+        # pygame.display.flip()
+        time.sleep(4)
+
+
 
     if not player:
-        endGame = theBoard.rectImage(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 200, 400, 200,
-                                    './assets/you_lose.png', 0, theBoard.surf)
 
-        time.sleep(10)
-    if not bag:
-        endGame = theBoard.rectImage(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 200, 400, 200,
-                                     './assets/you_lose.png', 0, theBoard.surf)
+        rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
 
-        time.sleep(10)
+        endGame = pygame.image.load('./assets/you_lose.png')
+        endGame = pygame.transform.scale(endGame, (400, 200))
+
+        # surface.blit(self.icon, self.rect)
+        screen.blit(endGame, rect)
+        pygame.display.flip()
+        # pygame.display.flip()
+        time.sleep(4)
+
+    if  not bag:
+        rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
+
+        endGame = pygame.image.load('./assets/game_over.png')
+        endGame = pygame.transform.scale(endGame, (400, 200))
+
+        # surface.blit(self.icon, self.rect)
+        screen.blit(endGame, rect)
+        pygame.display.flip()
+        # pygame.display.flip()
+        time.sleep(4)
 
     #END __MAIN__

@@ -10,11 +10,12 @@ class PlayGround(pygame.sprite.Sprite):
         self.surf = pygame.Surface((screenwidth,screenhight))
 
         # Draw the 3 zones
-        self.boardTable = pygame.Rect(0, 0, screenwidth - 200, screenhight - 250)
+        self.boardTable = pygame.Rect(0, 0, screenwidth - 10, screenhight - 250)
         self.carpet = self.rectImage(0, 0, screenwidth, screenhight, './assets/wall.png', 0,
                                      self.surf)
-        self.score = pygame.Rect(screenwidth - 200, 0, 200, screenhight - 250)
+        #self.score = pygame.Rect(screenwidth - 200, 0, 200, screenhight - 250)
         self.playerTable = pygame.Rect(0, screenhight - 250,screenwidth , 250)
+
         #self.boardTable = self.rectImage(40, 20, screenwidth - 200, screenhight - 250, './assets/tableFlower.png', 0,
         #                                 self.surf)
         #self.playerTable = self.rectImage(0, screenhight - 250,screenwidth , 250, './assets/table_top.png', 0,
@@ -26,8 +27,7 @@ class PlayGround(pygame.sprite.Sprite):
         #    y = self.rectsize + self.rectsize * i
         #    pygame.draw.line(self.surf,(255,255,255),(0,y),(screenwidth,y))
 
-
-        iter = screenwidth // self.rectsize
+        #iter = screenwidth // self.rectsize
         #for i in range(iter - 1):
         #    x = self.rectsize + self.rectsize * i
         #    pygame.draw.line(self.surf,(255,255,255),(x,0),(x,screenhight))
@@ -36,16 +36,17 @@ class PlayGround(pygame.sprite.Sprite):
         #pygame.draw.rect(self.surf, (255, 0, 0), self.score)
         #pygame.draw.rect(self.surf, (255, 0, 255), self.playerTable)
 
-        self.buttonUp = self.rectImage(screenwidth - 300, screenhight - 400, self.rectsize, self.rectsize,
-                                    './assets/arrow_right.png', 90, self.surf)
-        self.buttonDown = self.rectImage(screenwidth - 300, screenhight - 350, self.rectsize, self.rectsize,
-                                      './assets/arrow_right.png', -90, self.surf)
-        self.buttonLeft = self.rectImage(screenwidth - 350, screenhight - 375, self.rectsize, self.rectsize,
-                                      './assets/arrow_right.png', 180, self.surf)
-        self.buttonRight = self.rectImage(screenwidth - 250, screenhight - 375, self.rectsize, self.rectsize,
-                                       './assets/arrow_right.png', 0, self.surf)
-        self.buttonAdd = self.rectImage(screenwidth - 100, screenhight - 375, self.rectsize * 3, self.rectsize * 3,
-                                     './assets/button_add.png', 0, self.surf)
+        arrowCoef = 3
+        self.buttonUp = self.rectImage(screenwidth - 300, 5, self.rectsize * arrowCoef, self.rectsize * arrowCoef,
+                                    './assets/arrow.png', 90, self.surf)
+        self.buttonDown = self.rectImage(screenwidth - 300, 155, self.rectsize * arrowCoef, self.rectsize * arrowCoef,
+                                      './assets/arrow.png', -90, self.surf)
+        self.buttonLeft = self.rectImage(screenwidth - 375, 80, self.rectsize * arrowCoef, self.rectsize * arrowCoef,
+                                      './assets/arrow.png', 180, self.surf)
+        self.buttonRight = self.rectImage(screenwidth - 225, 80, self.rectsize * arrowCoef, self.rectsize * arrowCoef,
+                                       './assets/arrow.png', 0, self.surf)
+        self.buttonAdd = self.rectImage(screenwidth - 300, 80, self.rectsize * arrowCoef, self.rectsize * arrowCoef,
+                                     './assets/bag2.png', 0, self.surf)
 
         self.playGround = self.surf.get_rect()
 
