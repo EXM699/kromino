@@ -310,13 +310,42 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
         rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
 
         icon = pygame.image.load('./assets/IA_takes.png')
-        icon = pygame.transform.scale(icon, (400, 50))
+        icon = pygame.transform.scale(icon, (400, 400))
 
         # surface.blit(self.icon, self.rect)
         screen.blit(icon, rect)
         pygame.display.flip()
-        time.sleep(2)
+        time.sleep(3)
 
+def findFreeSpace(x = None, y = None):
+    print(' -----> findFreeSpece '+str(x)+' '+str(y))
+    if x is None:
+        x = theBoard.playerTable.x
+    if y is None:
+        y = theBoard.playerTable.y
+
+    for blockPlayer in player:
+        if blockPlayer.x == x and blockPlayer.y == y:
+            x = (x + blockPlayer.SQUAREBORDERSIZE * 3) + 5
+            print('new x '+str(x))
+            if x > theBoard.playerTable.width:
+                print('out off width')
+                x = 0
+                y = y + blockPlayer.SQUAREBORDERSIZE + 5
+                return findFreeSpace(x, y)
+                break
+
+            if y > screen.get_height():
+                x = theBoard.playerTable.x
+                y = theBoard.playerTable.y
+                print('out of borad then in corener')
+                break
+
+            print('recall findfreespace')
+            return findFreeSpace(x,y)
+            break
+
+    return (x,y)
 
 if __name__ == "__main__":
     # Define constants for the screen width and height
@@ -557,8 +586,11 @@ if __name__ == "__main__":
                     blocksInBag = bag.getNumberBlock()
                     randomBlockId = random.randint(0, blocksInBag - 1)
                     tempoBlock = bag.getBlock(randomBlockId)
-                    tempoBlock.setPosX(theBoard.playerTable.x)
-                    tempoBlock.setPosY(theBoard.playerTable.y)
+                    posInPlayerTable = findFreeSpace()
+                    print('je set la position ')
+                    print(posInPlayerTable)
+                    tempoBlock.setPosX(posInPlayerTable[0])
+                    tempoBlock.setPosY(posInPlayerTable[1])
                     player.append(tempoBlock)
                     blocksGroup.add(tempoBlock)
                     bag.removeBlock(tempoBlock)
