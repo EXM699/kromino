@@ -341,6 +341,21 @@ def findFreeSpace(x = None, y = None):
 
     return (x,y)
 
+def score(Score = 0 ):
+
+    tenPart = int(Score/10)
+    unitPart = Score % 10
+
+    fileTen = './assets/'+str(tenPart)+'.png'
+    fileUnit = './assets/'+str(unitPart)+'.png'
+    numberL = pygame.image.load(fileTen)
+    numberR = pygame.image.load(fileUnit)
+
+    numberL = pygame.transform.scale(numberL, (40, 40))
+    numberR = pygame.transform.scale(numberR, (40, 40))
+
+    return(numberL,numberR)
+
 if __name__ == "__main__":
     # Define constants for the screen width and height
     xRectifCoef = 0
@@ -470,8 +485,8 @@ if __name__ == "__main__":
     #playground.Button.draw(theBoard.surf)
 
 
-
     while running and computer and player and bag :
+
         if turn == 'COMPUTER':
             computerIA(gameMatrix, computer, minX, maxX, minY, maxY)
             turn = 'PLAYER'
@@ -606,6 +621,25 @@ if __name__ == "__main__":
             screen.blit(entity.surf, entity.block)
 
         #END FOR
+
+
+
+        IANumber = score(len(computer))
+
+        #theBoard.scoreBoard(score(len(computer)))
+
+        computerRectL = pygame.Rect(65, 33, 30, 30)
+        computerRectR = pygame.Rect(95, 33, 30, 30)
+
+        rect = pygame.Rect(0, 0, 400, 200)
+
+        scoreBoard = pygame.image.load('./assets/score_board2.png')
+        scoreBoard = pygame.transform.scale(scoreBoard, (200, 100))
+
+        screen.blit(scoreBoard,rect)
+        screen.blit(IANumber[0], computerRectL)
+        screen.blit(IANumber[1], computerRectR)
+
 
         # Update the display
         pygame.display.flip()

@@ -65,3 +65,21 @@ class PlayGround(pygame.sprite.Sprite):
         #pygame.display.flip()
 
         return self.rect
+
+    def score(Score=0):
+        tenPart = int(Score / 10)
+        unitPart = Score % 10
+
+        fileTen = './assets/' + str(tenPart) + '.png'
+        fileUnit = './assets/' + str(unitPart) + '.png'
+        numberL = pygame.image.load(fileTen)
+        numberR = pygame.image.load(fileUnit)
+
+        numberL = pygame.transform.scale(numberL, (40, 40))
+        numberR = pygame.transform.scale(numberR, (40, 40))
+
+        return (numberL, numberR)
+
+
+    def scoreBoard(self):
+        pass
