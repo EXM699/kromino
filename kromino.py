@@ -279,6 +279,7 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
             break
 
     if blockOk:
+
         rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
 
         icon = pygame.image.load('./assets/reflechir.png')
@@ -302,6 +303,10 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
         blocksGroup.add(block)
 
     else:
+        theBoard.scoreBoard(len(computer), 15, 33, 'Adversaire',screen)
+        theBoard.scoreBoard(len(player), 215, 33, 'Joueur',screen)
+        pygame.display.flip()
+
         blocksInBag = bag.getNumberBlock()
         randomBlockId = random.randint(0, blocksInBag - 1)
         computer.append(bag.getBlock(randomBlockId))
@@ -488,8 +493,8 @@ if __name__ == "__main__":
     while running and computer and player and bag :
 
         if turn == 'COMPUTER':
-            theBoard.scoreBoard(len(computer), 15, 33, 'Adversaire')
-            theBoard.scoreBoard(len(player), 215, 33, 'Joueur')
+            theBoard.scoreBoard(len(computer), 15, 33, 'Adversaire',screen)
+            theBoard.scoreBoard(len(player), 215, 33, 'Joueur',screen)
             pygame.display.flip()
 
             computerIA(gameMatrix, computer, minX, maxX, minY, maxY)
@@ -627,8 +632,8 @@ if __name__ == "__main__":
         #END FOR
 
 
-        theBoard.scoreBoard(len(computer),15,33,'Adversaire')
-        theBoard.scoreBoard(len(player),215,33,'Joueur')
+        theBoard.scoreBoard(len(computer),15,33,'Adversaire',screen)
+        theBoard.scoreBoard(len(player),215,33,'Joueur',screen)
 
 
 

@@ -81,7 +81,7 @@ class PlayGround(pygame.sprite.Sprite):
         return (numberL, numberR)
 
 
-    def scoreBoard(self, result, x, y,message ):
+    def scoreBoard(self, result, x, y,message,surface ):
 
 
         splitResult = self.score(result)
@@ -97,9 +97,9 @@ class PlayGround(pygame.sprite.Sprite):
         font = pygame.font.SysFont(None, 24)
         img = font.render(message, True, (0,0,0))
 
-        self.surf.blit(scoreBoard, rect)
-        self.surf.blit(splitResult[0], computerRectL)
-        self.surf.blit(splitResult[1], computerRectR)
+        surface.blit(scoreBoard, rect)
+        surface.blit(splitResult[0], computerRectL)
+        surface.blit(splitResult[1], computerRectR)
         mX = int ((200 - len(message)) / 4)
 
         if mX < 0:
@@ -111,5 +111,5 @@ class PlayGround(pygame.sprite.Sprite):
         #mX = x + 20
         mY = y + 20
 
-        self.surf.blit(img, (mX, mY))
+        surface.blit(img, (mX, mY))
 
