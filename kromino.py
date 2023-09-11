@@ -287,7 +287,7 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
         # surface.blit(self.icon, self.rect)
         screen.blit(icon, rect)
         pygame.display.flip()
-        # pygame.display.flip()
+
         time.sleep(2)
 
         calculX = ((x - MATRIXCOEF) * theBoard.rectsize) - (xRectifCoef * theBoard.rectsize)
@@ -488,6 +488,10 @@ if __name__ == "__main__":
     while running and computer and player and bag :
 
         if turn == 'COMPUTER':
+            theBoard.scoreBoard(len(computer), 15, 33, 'Adversaire')
+            theBoard.scoreBoard(len(player), 215, 33, 'Joueur')
+            pygame.display.flip()
+
             computerIA(gameMatrix, computer, minX, maxX, minY, maxY)
             turn = 'PLAYER'
 
@@ -623,22 +627,9 @@ if __name__ == "__main__":
         #END FOR
 
 
+        theBoard.scoreBoard(len(computer),15,33,'Adversaire')
+        theBoard.scoreBoard(len(player),215,33,'Joueur')
 
-        IANumber = score(len(computer))
-
-        #theBoard.scoreBoard(score(len(computer)))
-
-        computerRectL = pygame.Rect(65, 33, 30, 30)
-        computerRectR = pygame.Rect(95, 33, 30, 30)
-
-        rect = pygame.Rect(0, 0, 400, 200)
-
-        scoreBoard = pygame.image.load('./assets/score_board2.png')
-        scoreBoard = pygame.transform.scale(scoreBoard, (200, 100))
-
-        screen.blit(scoreBoard,rect)
-        screen.blit(IANumber[0], computerRectL)
-        screen.blit(IANumber[1], computerRectR)
 
 
         # Update the display

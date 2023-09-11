@@ -66,7 +66,7 @@ class PlayGround(pygame.sprite.Sprite):
 
         return self.rect
 
-    def score(Score=0):
+    def score(self,Score=0):
         tenPart = int(Score / 10)
         unitPart = Score % 10
 
@@ -81,5 +81,35 @@ class PlayGround(pygame.sprite.Sprite):
         return (numberL, numberR)
 
 
-    def scoreBoard(self):
-        pass
+    def scoreBoard(self, result, x, y,message ):
+
+
+        splitResult = self.score(result)
+
+        rect = pygame.Rect(x, y, 200, 100)
+
+        computerRectL = pygame.Rect(x+65, y+33, 30, 30)
+        computerRectR = pygame.Rect(x+95, y+33, 30, 30)
+
+        scoreBoard = pygame.image.load('./assets/score_board2.png')
+        scoreBoard = pygame.transform.scale(scoreBoard, (200, 100))
+
+        font = pygame.font.SysFont(None, 24)
+        img = font.render(message, True, (0,0,0))
+
+        self.surf.blit(scoreBoard, rect)
+        self.surf.blit(splitResult[0], computerRectL)
+        self.surf.blit(splitResult[1], computerRectR)
+        mX = int ((200 - len(message)) / 4)
+
+        if mX < 0:
+            mX = x + 5
+        else:
+            mX = mX + x
+
+
+        #mX = x + 20
+        mY = y + 20
+
+        self.surf.blit(img, (mX, mY))
+
