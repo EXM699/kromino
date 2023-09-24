@@ -289,8 +289,11 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
         icon = pygame.transform.scale(icon, (50, 50))
 
         # surface.blit(self.icon, self.rect)
-        screen.blit(icon, rect)
-        pygame.display.flip()
+        #screen.blit(icon, rect)
+        #pygame.display.flip()
+
+        pygame.mixer.Sound.play(soundClock)
+        pygame.mixer.music.stop()
 
         time.sleep(2)
 
@@ -365,6 +368,12 @@ def score(Score = 0 ):
     return(numberL,numberR)
 
 if __name__ == "__main__":
+    #sound
+    pygame.mixer.init()
+    soundPlayerOk = pygame.mixer.Sound("./assets/playerOk.wav")
+    soundPlayerNok = pygame.mixer.Sound("./assets/fail.wav")
+    soundClock = pygame.mixer.Sound("./assets/clock.wav")
+
     # Define constants for the screen width and height
     xRectifCoef = 0
     yRectifCoef = 0
@@ -446,7 +455,6 @@ if __name__ == "__main__":
     #create sprite group
     blocksGroup = pygame.sprite.Group()
 
-
     #blit the sceen
     screen.blit(theBoard.surf,theBoard.playGround)
 
@@ -466,10 +474,10 @@ if __name__ == "__main__":
 
     #to debug IA
 
-    """
+
     posXComputer = SCREEN_WIDTH - 180
     posYComputer = 0
-    for playerComputer in computer:
+    """for playerComputer in computer:
         playerComputer.setPosX(posXComputer)
         playerComputer.setPosY(posYComputer)
         playerComputer.block.x = posXComputer
@@ -538,6 +546,11 @@ if __name__ == "__main__":
                                 addToMatrix(gameMatrix, playerBlock)
                                 player.remove(playerBlock)
                                 turn = 'COMPUTER'
+                                #play sound
+
+                                pygame.mixer.Sound.play(soundPlayerOk)
+                                pygame.mixer.music.stop()
+
                     else:
                         playerBlock.setPosX(mousePos[0])
                         playerBlock.setPosY(mousePos[1])
@@ -615,6 +628,8 @@ if __name__ == "__main__":
                     bag.removeBlock(tempoBlock)
                     turn = 'COMPUTER'
                     tempoBlock.redraw()
+                    pygame.mixer.Sound.play(soundPlayerNok)
+                    pygame.mixer.music.stop()
 
                 elif event.type == MOUSEBUTTONUP and not captured and \
                         theBoard.buttonAdd.collidepoint(mousePos) and \

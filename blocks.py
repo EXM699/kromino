@@ -8,6 +8,7 @@ class Blocks(pygame.sprite.Sprite):
     BLUE = (0, 0, 255)
     YELLOW = (255, 255, 0)
     VIOLET = (127, 0, 255)
+
     def horizontalBlock(self,col1,col2,col3,x,y,hide = False,boardsurf = None):
         BORDERCOLOR = self.BLACK
         if self.focus:
@@ -27,7 +28,7 @@ class Blocks(pygame.sprite.Sprite):
         margin = (self.SQUAREBORDERSIZE - self.SQUARESIZE) / 2
         lenBlock = (margin + self.SQUARESIZE + margin + self.SQUARESIZE + margin + self.SQUARESIZE + margin,
                     margin + self.SQUARESIZE + margin)
-        self.surf = pygame.Surface(lenBlock,pygame.SRCALPHA, 32)
+        self.surf = pygame.Surface(lenBlock,pygame.SRCALPHA)
 
         # draw border rectangle
         #rectBorder = pygame.Rect(margin, margin, self.SQUAREBORDERSIZE, self.SQUAREBORDERSIZE)
@@ -210,6 +211,7 @@ class Blocks(pygame.sprite.Sprite):
         self.block = self.surf.get_rect()
 
 
+
     def __init__(self,col1,col2,col3,posx = 0, posy=0,boardsurf=None):
         super(Blocks, self).__init__()
         self.SQUAREBORDERSIZEALIGN = 26
@@ -313,7 +315,8 @@ class Bag():
         for col1 in self.colors:
             for col2 in self.colors:
                 for col3 in self.colors:
-                        if Blocks(col1,col2,col3) not in self.bagBlocks and Blocks(col3,col2,col1) not in self.bagBlocks :
+                        if Blocks(col1,col2,col3) not in self.bagBlocks and Blocks(col3,col2,col1) not in self.bagBlocks \
+                                and not(col1 == col2 and col2 == col3 and col1==col3) :
                             self.bagBlocks.append(Blocks(col1,col2,col3,boarsurf))
 
 
