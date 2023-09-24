@@ -4,7 +4,11 @@ import pygame
 class Blocks(pygame.sprite.Sprite):
     RED = (255, 0, 0)
     BLACK = (0,0,0)
-    def horizontalBlock(self,col1,col2,col3,x,y,hide = False):
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+    YELLOW = (255, 255, 0)
+    VIOLET = (127, 0, 255)
+    def horizontalBlock(self,col1,col2,col3,x,y,hide = False,boardsurf = None):
         BORDERCOLOR = self.BLACK
         if self.focus:
             self.SQUAREBORDERSIZE = 30
@@ -23,20 +27,79 @@ class Blocks(pygame.sprite.Sprite):
         margin = (self.SQUAREBORDERSIZE - self.SQUARESIZE) / 2
         lenBlock = (margin + self.SQUARESIZE + margin + self.SQUARESIZE + margin + self.SQUARESIZE + margin,
                     margin + self.SQUARESIZE + margin)
-        self.surf = pygame.Surface(lenBlock)
+        self.surf = pygame.Surface(lenBlock,pygame.SRCALPHA, 32)
 
         # draw border rectangle
-        rectBorder = pygame.Rect(margin, margin, self.SQUAREBORDERSIZE, self.SQUAREBORDERSIZE)
+        #rectBorder = pygame.Rect(margin, margin, self.SQUAREBORDERSIZE, self.SQUAREBORDERSIZE)
         # draw the rectangles
-        rect1 = pygame.Rect(margin, margin, self.SQUARESIZE, self.SQUARESIZE)
-        rect2 = pygame.Rect(margin + self.SQUARESIZE + margin, margin, self.SQUARESIZE, self.SQUARESIZE)
-        rect3 = pygame.Rect(margin + (self.SQUARESIZE + margin) * 2, margin, self.SQUARESIZE, self.SQUARESIZE)
+        #rect1 = pygame.Rect(margin, margin, self.SQUARESIZE, self.SQUARESIZE)
+        #rect2 = pygame.Rect(margin + self.SQUARESIZE + margin, margin, self.SQUARESIZE, self.SQUARESIZE)
+        #rect3 = pygame.Rect(margin + (self.SQUARESIZE + margin) * 2, margin, self.SQUARESIZE, self.SQUARESIZE)
 
         # Dessiner les rectangles sur l'écran
-        pygame.draw.rect(self.surf, BORDERCOLOR, rectBorder)
-        pygame.draw.rect(self.surf, col1, rect1)
-        pygame.draw.rect(self.surf, col2, rect2)
-        pygame.draw.rect(self.surf, col3, rect3)
+        #pygame.draw.rect(self.surf, BORDERCOLOR, rectBorder)
+        if boardsurf is None:
+            mySurf = pygame.Surface(lenBlock)
+        else:
+            mySurf = boardsurf
+
+        #print(mySurf)
+        if col1 == self.RED:
+            colimag1 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+        elif col1 == self.GREEN:
+            colimag1 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+        elif col1 == self.YELLOW:
+            colimag1 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+        elif col1 == self.BLUE:
+            colimag1 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+        else:
+            colimag1 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+
+        if col2 == self.RED:
+            colimag2 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+        elif col2 == self.GREEN:
+            colimag2 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+
+        elif col2 == self.YELLOW:
+            colimag2 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+
+        elif col2 == self.BLUE:
+            colimag2 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+
+        else:
+            colimag2 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+
+
+        if col3 == self.RED:
+            colimag3 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+
+        elif col3 == self.GREEN:
+            colimag3 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+
+        elif col3 == self.YELLOW:
+            colimag3 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+
+        elif col3 == self.BLUE:
+            colimag3 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+
+        else:
+            colimag3 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+
+
+
+
+        # pygame.draw.rect(self.surf, col1, rect1)
+        #pygame.draw.rect(self.surf, col2, rect2)
+        #pygame.draw.rect(self.surf, col3, rect3)
+
+        colimag1 = pygame.transform.scale(colimag1, (self.SQUARESIZE , self.SQUARESIZE))
+        self.surf.blit(colimag1, (margin,margin))
+
+        colimag2 = pygame.transform.scale(colimag2, (self.SQUARESIZE, self.SQUARESIZE))
+        self.surf.blit(colimag2, (margin + self.SQUARESIZE + margin, margin))
+
+        colimag3 = pygame.transform.scale(colimag3, (self.SQUARESIZE, self.SQUARESIZE))
+        self.surf.blit(colimag3, (margin + (self.SQUARESIZE + margin) * 2, margin))
 
         self.orientation = 'H'
         self.col1 = col1
@@ -46,9 +109,10 @@ class Blocks(pygame.sprite.Sprite):
         self.x = x
         self.y = y
 
+
         self.block = self.surf.get_rect()
 
-    def verticalBlock(self,col1,col2,col3,x,y,hide=False):
+    def verticalBlock(self,col1,col2,col3,x,y,hide=False,boardsurf = None):
 
         BORDERCOLOR = self.BLACK
         if self.focus:
@@ -69,20 +133,69 @@ class Blocks(pygame.sprite.Sprite):
         lenBlock = (margin + self.SQUARESIZE + margin,
                     margin + self.SQUARESIZE + margin + self.SQUARESIZE + margin + self.SQUARESIZE + margin
                     )
-        self.surf = pygame.Surface(lenBlock)
+        self.surf = pygame.Surface(lenBlock,pygame.SRCALPHA, 32)
+
+
 
         # draw border rectangle
-        rectBorder = pygame.Rect(margin, margin, self.SQUAREBORDERSIZE, self.SQUAREBORDERSIZE)
+        #rectBorder = pygame.Rect(margin, margin, self.SQUAREBORDERSIZE, self.SQUAREBORDERSIZE)
         # draw the rectangles
-        rect1 = pygame.Rect(margin, margin, self.SQUARESIZE, self.SQUARESIZE)
-        rect2 = pygame.Rect(margin,margin + self.SQUARESIZE + margin, self.SQUARESIZE, self.SQUARESIZE)
-        rect3 = pygame.Rect(margin,margin + (self.SQUARESIZE + margin) * 2, self.SQUARESIZE, self.SQUARESIZE)
+        #rect1 = pygame.Rect(margin, margin, self.SQUARESIZE, self.SQUARESIZE)
+        #rect2 = pygame.Rect(margin,margin + self.SQUARESIZE + margin, self.SQUARESIZE, self.SQUARESIZE)
+        #rect3 = pygame.Rect(margin,margin + (self.SQUARESIZE + margin) * 2, self.SQUARESIZE, self.SQUARESIZE)
 
         # Dessiner les rectangles sur l'écran
-        pygame.draw.rect(self.surf, BORDERCOLOR, rectBorder)
-        pygame.draw.rect(self.surf, col1, rect1)
-        pygame.draw.rect(self.surf, col2, rect2)
-        pygame.draw.rect(self.surf, col3, rect3)
+        #pygame.draw.rect(self.surf, BORDERCOLOR, rectBorder)
+        if boardsurf is None:
+            mySurf = pygame.Surface(lenBlock)
+        else:
+            mySurf = boardsurf
+
+        if col1 == self.RED:
+            colimag1 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+        elif col1 == self.GREEN:
+            colimag1 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+        elif col1 == self.YELLOW:
+            colimag1 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+        elif col1 == self.BLUE:
+            colimag1 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+        else:
+            colimag1 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+
+        if col2 == self.RED:
+            colimag2 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+        elif col2 == self.GREEN:
+            colimag2 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+        elif col2 == self.YELLOW:
+            colimag2 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+        elif col2 == self.BLUE:
+            colimag2 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+        else:
+            colimag2 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+
+        if col3 == self.RED:
+            colimag3 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+        elif col3 == self.GREEN:
+            colimag3 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+        elif col3 == self.YELLOW:
+            colimag3 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+        elif col3 == self.BLUE:
+            colimag3 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+        else:
+            colimag3 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+
+        #pygame.draw.rect(self.surf, col1, rect1)
+        #pygame.draw.rect(self.surf, col2, rect2)
+        #pygame.draw.rect(self.surf, col3, rect3)
+
+        colimag1 = pygame.transform.scale(colimag1, (self.SQUARESIZE, self.SQUARESIZE))
+        self.surf.blit(colimag1, (margin, margin))
+
+        colimag2 = pygame.transform.scale(colimag2, (self.SQUARESIZE, self.SQUARESIZE))
+        self.surf.blit(colimag2, (margin,margin + self.SQUARESIZE + margin))
+
+        colimag3 = pygame.transform.scale(colimag3, (self.SQUARESIZE, self.SQUARESIZE))
+        self.surf.blit(colimag3, (margin,margin + (self.SQUARESIZE + margin) * 2))
 
         self.orientation = 'V'
         self.col1 = col1
@@ -92,10 +205,12 @@ class Blocks(pygame.sprite.Sprite):
         self.x = x
         self.y = y
 
+        #self.brol = pygame.Surface(lenBlock)
+        #self.block = self.brol.get_rect()
         self.block = self.surf.get_rect()
 
 
-    def __init__(self,col1,col2,col3,posx = 0, posy=0):
+    def __init__(self,col1,col2,col3,posx = 0, posy=0,boardsurf=None):
         super(Blocks, self).__init__()
         self.SQUAREBORDERSIZEALIGN = 26
 
@@ -104,7 +219,7 @@ class Blocks(pygame.sprite.Sprite):
         self.focus = False
         self.canBeMoved = True
         self.orientation = None
-        self.horizontalBlock(col1, col2, col3,posx,posy)
+        self.horizontalBlock(col1, col2, col3,posx,posy,boardsurf)
 
 
     def rectifPos(self,pos):
@@ -159,8 +274,8 @@ class Blocks(pygame.sprite.Sprite):
             self.horizontalBlock(self.col3,self.col2,self.col1,self.x,self.y)
             self.orientation = 'H'
 
-        self.block.x = self.x
-        self.block.y = self.y
+        #self.block.x = self.x
+        #self.block.y = self.y
 
     def redraw(self):
         if self.orientation == 'V':
@@ -175,29 +290,31 @@ class Blocks(pygame.sprite.Sprite):
         self.focus = focus
         self.redraw()
 class Bag():
+
     def setColor(self):
-        self.color = []
         RED = (255, 0, 0)
         GREEN = (0, 255, 0)
         BLUE = (0, 0, 255)
         YELLOW = (255, 255, 0)
         VIOLET = (127, 0, 255)
 
+        self.color = []
+
         self.color = [RED,GREEN,BLUE,YELLOW,VIOLET]
 
         return self.color
-    def __init__(self):
+    def __init__(self,boarsurf=None):
         self.colors = self.setColor()
         self.bagBlocks = []
 
         for color in self.colors:
-            self.bagBlocks.append(Blocks(color, color, color))
+            self.bagBlocks.append(Blocks(color, color, color,boarsurf))
 
         for col1 in self.colors:
             for col2 in self.colors:
                 for col3 in self.colors:
                         if Blocks(col1,col2,col3) not in self.bagBlocks and Blocks(col3,col2,col1) not in self.bagBlocks :
-                            self.bagBlocks.append(Blocks(col1,col2,col3))
+                            self.bagBlocks.append(Blocks(col1,col2,col3,boarsurf))
 
 
 

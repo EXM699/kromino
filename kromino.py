@@ -279,6 +279,9 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
             break
 
     if blockOk:
+        theBoard.scoreBoard(len(computer), 15, 33, 'Adversaire',screen)
+        theBoard.scoreBoard(len(player), 215, 33, 'Moi',screen)
+        pygame.display.flip()
 
         rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
 
@@ -304,7 +307,7 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
 
     else:
         theBoard.scoreBoard(len(computer), 15, 33, 'Adversaire',screen)
-        theBoard.scoreBoard(len(player), 215, 33, 'Joueur',screen)
+        theBoard.scoreBoard(len(player), 215, 33, 'Moi',screen)
         pygame.display.flip()
 
         blocksInBag = bag.getNumberBlock()
@@ -389,7 +392,7 @@ if __name__ == "__main__":
     theBoard = playground.PlayGround(SCREEN_WIDTH,SCREEN_HEIGHT)
 
     # Instantiate a bag of blocks
-    bag = blocks.Bag()
+    bag = blocks.Bag(theBoard.surf)
 
     #get randomly the first block to start the game
     #always à 3 colors blocks
@@ -494,7 +497,7 @@ if __name__ == "__main__":
 
         if turn == 'COMPUTER':
             theBoard.scoreBoard(len(computer), 15, 33, 'Adversaire',screen)
-            theBoard.scoreBoard(len(player), 215, 33, 'Joueur',screen)
+            theBoard.scoreBoard(len(player), 215, 33, 'Moi',screen)
             pygame.display.flip()
 
             computerIA(gameMatrix, computer, minX, maxX, minY, maxY)
@@ -633,7 +636,7 @@ if __name__ == "__main__":
 
 
         theBoard.scoreBoard(len(computer),15,33,'Adversaire',screen)
-        theBoard.scoreBoard(len(player),215,33,'Joueur',screen)
+        theBoard.scoreBoard(len(player),215,33,'Moi',screen)
 
 
 
