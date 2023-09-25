@@ -251,7 +251,8 @@ def validationBlock(matrix,block,x,y):
         return validationBlockV(matrix, block, x, y)
 
 
-def computerIA(matrix, computer, minX, maxX, minY, maxY):
+def computerIA(matrix, computer, minX, maxX, minY, maxY, handicap = 100):
+
 
     blockOk = False
     find = False
@@ -268,8 +269,9 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
                     if (block.orientation == 'H' and matrix[x][y] == 0 and matrix[x+1][y] == 0 and matrix[x+2][y] == 0 ) or \
                             (block.orientation == 'V' and matrix[x][y] == 0 and matrix[x][y+1] == 0 and matrix[x][y+2] == 0 ):
                         blockOk = validationBlock(matrix,block,x,y)
-                    if blockOk:
-                        find = True
+                    if blockOk :
+                        if  int(random.randint(0,  100)) <= handicap:
+                            find = True
 
             if not find:
                 block.rotate()
@@ -319,8 +321,12 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY):
         bag.removeBlock(bag.getBlock(randomBlockId))
         rect = pygame.Rect(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 300, 50, 50)
 
+        pygame.mixer.Sound.play(soundTake)
+        pygame.mixer.music.stop()
+
         icon = pygame.image.load('./assets/IA_takes.png')
         icon = pygame.transform.scale(icon, (400, 400))
+
 
         # surface.blit(self.icon, self.rect)
         screen.blit(icon, rect)
@@ -376,6 +382,7 @@ if __name__ == "__main__":
     soundBack = pygame.mixer.Sound("./assets/background.mp3")
     soundGameOver = pygame.mixer.Sound("./assets/gameover.mp3")
     soundWin = pygame.mixer.Sound("./assets/win.mp3")
+    soundTake = pygame.mixer.Sound("./assets/takeinbag.mp3")
 
     pygame.mixer.Sound.play(soundBack,-1)
 
@@ -480,10 +487,10 @@ if __name__ == "__main__":
 
     #to debug IA
 
-
+    """
     posXComputer = SCREEN_WIDTH - 180
     posYComputer = 0
-    """for playerComputer in computer:
+    for playerComputer in computer:
         playerComputer.setPosX(posXComputer)
         playerComputer.setPosY(posYComputer)
         playerComputer.block.x = posXComputer
@@ -514,7 +521,7 @@ if __name__ == "__main__":
             theBoard.scoreBoard(len(player), 215, 33, 'Moi',screen)
             pygame.display.flip()
 
-            computerIA(gameMatrix, computer, minX, maxX, minY, maxY)
+            computerIA(gameMatrix, computer, minX, maxX, minY, maxY,75)
             turn = 'PLAYER'
 
         screen.fill(BACKGROUNDCOLOR)
@@ -632,6 +639,8 @@ if __name__ == "__main__":
                     player.append(tempoBlock)
                     blocksGroup.add(tempoBlock)
                     bag.removeBlock(tempoBlock)
+                    pygame.mixer.Sound.play(soundTake)
+                    pygame.mixer.music.stop()
                     turn = 'COMPUTER'
                     tempoBlock.redraw()
                     pygame.mixer.Sound.play(soundPlayerNok)
