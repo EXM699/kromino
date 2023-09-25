@@ -373,6 +373,12 @@ if __name__ == "__main__":
     soundPlayerOk = pygame.mixer.Sound("./assets/playerOk.wav")
     soundPlayerNok = pygame.mixer.Sound("./assets/fail.wav")
     soundClock = pygame.mixer.Sound("./assets/clock.wav")
+    soundBack = pygame.mixer.Sound("./assets/background.mp3")
+    soundGameOver = pygame.mixer.Sound("./assets/gameover.mp3")
+    soundWin = pygame.mixer.Sound("./assets/win.mp3")
+
+    pygame.mixer.Sound.play(soundBack,-1)
+
 
     # Define constants for the screen width and height
     xRectifCoef = 0
@@ -672,6 +678,10 @@ if __name__ == "__main__":
         screen.blit(endGame, rect)
         pygame.display.flip()
         # pygame.display.flip()
+
+        pygame.mixer.Sound.play(soundGameOver)
+        pygame.mixer.music.stop()
+
         time.sleep(4)
 
 
@@ -687,6 +697,9 @@ if __name__ == "__main__":
         screen.blit(endGame, rect)
         pygame.display.flip()
         # pygame.display.flip()
+
+        pygame.mixer.Sound.play(soundWin)
+        pygame.mixer.music.stop()
         time.sleep(4)
 
     if  not bag:
