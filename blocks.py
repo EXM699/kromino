@@ -1,3 +1,5 @@
+import time
+
 import pygame
 
 
@@ -46,45 +48,45 @@ class Blocks(pygame.sprite.Sprite):
 
         #print(mySurf)
         if col1 == self.RED:
-            colimag1 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_red_256.png').convert_alpha(mySurf)
         elif col1 == self.GREEN:
-            colimag1 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_green_256.png').convert_alpha(mySurf)
         elif col1 == self.YELLOW:
-            colimag1 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_yellow_256.png').convert_alpha(mySurf)
         elif col1 == self.BLUE:
-            colimag1 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_blue_256.png').convert_alpha(mySurf)
         else:
-            colimag1 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_violet_256.png').convert_alpha(mySurf)
 
         if col2 == self.RED:
-            colimag2 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_red_256.png').convert_alpha(mySurf)
         elif col2 == self.GREEN:
-            colimag2 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_green_256.png').convert_alpha(mySurf)
 
         elif col2 == self.YELLOW:
-            colimag2 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_yellow_256.png').convert_alpha(mySurf)
 
         elif col2 == self.BLUE:
-            colimag2 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_blue_256.png').convert_alpha(mySurf)
 
         else:
-            colimag2 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_violet_256.png').convert_alpha(mySurf)
 
 
         if col3 == self.RED:
-            colimag3 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_red_256.png').convert_alpha(mySurf)
 
         elif col3 == self.GREEN:
-            colimag3 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_green_256.png').convert_alpha(mySurf)
 
         elif col3 == self.YELLOW:
-            colimag3 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_yellow_256.png').convert_alpha(mySurf)
 
         elif col3 == self.BLUE:
-            colimag3 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_blue_256.png').convert_alpha(mySurf)
 
         else:
-            colimag3 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_violet_256.png').convert_alpha(mySurf)
 
 
 
@@ -153,37 +155,37 @@ class Blocks(pygame.sprite.Sprite):
             mySurf = boardsurf
 
         if col1 == self.RED:
-            colimag1 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_red_256.png').convert_alpha(mySurf)
         elif col1 == self.GREEN:
-            colimag1 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_green_256.png').convert_alpha(mySurf)
         elif col1 == self.YELLOW:
-            colimag1 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_yellow_256.png').convert_alpha(mySurf)
         elif col1 == self.BLUE:
-            colimag1 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_blue_256.png').convert_alpha(mySurf)
         else:
-            colimag1 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+            colimag1 = pygame.image.load('./assets/ball_eric_violet_256.png').convert_alpha(mySurf)
 
         if col2 == self.RED:
-            colimag2 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_red_256.png').convert_alpha(mySurf)
         elif col2 == self.GREEN:
-            colimag2 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_green_256.png').convert_alpha(mySurf)
         elif col2 == self.YELLOW:
-            colimag2 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_yellow_256.png').convert_alpha(mySurf)
         elif col2 == self.BLUE:
-            colimag2 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_blue_256.png').convert_alpha(mySurf)
         else:
-            colimag2 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+            colimag2 = pygame.image.load('./assets/ball_eric_violet_256.png').convert_alpha(mySurf)
 
         if col3 == self.RED:
-            colimag3 = pygame.image.load('./assets/ball_eric_red_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_red_256.png').convert_alpha(mySurf)
         elif col3 == self.GREEN:
-            colimag3 = pygame.image.load('./assets/ball_eric_green_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_green_256.png').convert_alpha(mySurf)
         elif col3 == self.YELLOW:
-            colimag3 = pygame.image.load('./assets/ball_eric_yellow_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_yellow_256.png').convert_alpha(mySurf)
         elif col3 == self.BLUE:
-            colimag3 = pygame.image.load('./assets/ball_eric_blue_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_blue_256.png').convert_alpha(mySurf)
         else:
-            colimag3 = pygame.image.load('./assets/ball_eric_violet_64.png').convert_alpha(mySurf)
+            colimag3 = pygame.image.load('./assets/ball_eric_violet_256.png').convert_alpha(mySurf)
 
         #pygame.draw.rect(self.surf, col1, rect1)
         #pygame.draw.rect(self.surf, col2, rect2)
@@ -222,6 +224,9 @@ class Blocks(pygame.sprite.Sprite):
         self.canBeMoved = True
         self.orientation = None
         self.horizontalBlock(col1, col2, col3,posx,posy,boardsurf)
+        self.lastIaPlayed = False
+        self.lastPlayedTime = None
+        self.lastRefreshScreen = None
 
 
     def rectifPos(self,pos):

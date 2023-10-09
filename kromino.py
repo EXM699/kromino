@@ -304,6 +304,9 @@ def computerIA(matrix, computer, minX, maxX, minY, maxY, handicap = 100):
 
         block.setPosX(calculX)
         block.setPosY(calculY)
+        block.lastIaPlayed = True
+        block.lastPlayedTime = time.time()
+        block.lastRefreshScreen = time.time()
         addToMatrix(gameMatrix, block)
         computer.remove(block)
         board.append(block)
@@ -657,6 +660,17 @@ if __name__ == "__main__":
 
             #END FOR PLAYER
         #END FOR EVENT
+
+        for block in board:
+            if block.lastIaPlayed:
+                if time.time() - block.lastRefreshScreen > 0.3:
+                    block.lastRefreshScreen = time.time()
+                    block.hide = not block.hide
+                    block.redraw()
+                    if time.time() - block.lastPlayedTime > 5:
+                        block.lastPlayedTime = False
+                        block.hide = False
+                        block.redraw()
 
         # Draw the player on the screen
         for entity in blocksGroup:
